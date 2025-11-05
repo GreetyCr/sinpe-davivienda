@@ -46,8 +46,8 @@ brew install watchman
 ### Paso 4: Clonar el repositorio
 
 ```bash
-git clone https://github.com/TU-USUARIO/DAVIVIENDA.git
-cd DAVIVIENDA
+git clone https://github.com/GreetyCr/sinpe-davivienda.git
+cd sinpe-davivienda
 ```
 
 ### Paso 5: Instalar dependencias
@@ -106,8 +106,8 @@ npm start
 ### Paso 3: Clonar el repositorio
 
 ```cmd
-git clone https://github.com/TU-USUARIO/DAVIVIENDA.git
-cd DAVIVIENDA
+git clone https://github.com/GreetyCr/sinpe-davivienda.git
+cd sinpe-davivienda
 ```
 
 ### Paso 4: Instalar dependencias

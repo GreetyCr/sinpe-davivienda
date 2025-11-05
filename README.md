@@ -33,8 +33,8 @@ Ver decisiones arquitectónicas completas en [`/docs/adr/`](./docs/adr/)
 
 ```bash
 # Clonar el repositorio
-git clone <repository-url>
-cd DAVIVIENDA
+git clone https://github.com/GreetyCr/sinpe-davivienda.git
+cd sinpe-davivienda
 
 # Instalar dependencias
 npm install
