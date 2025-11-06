@@ -7,8 +7,7 @@ import { mockUser, mockContacts } from '@/utils/mockData';
 import {
   PhoneInput,
   AmountInput,
-  QuickContactSelector,
-  ContactPicker,
+  ContactSelector,
   TransferSummary,
   SuccessModal,
 } from '@/components/transfer';
@@ -119,18 +118,12 @@ export default function TransferScreen() {
           </View>
         </View>
 
-        {/* Contactos rápidos */}
-        {favoriteContacts.length > 0 && (
-          <QuickContactSelector
-            contacts={favoriteContacts}
-            onSelectContact={handleSelectContact}
-            selectedPhone={phoneNumber}
-          />
-        )}
-
-        {/* Selector nativo de contactos */}
-        <ContactPicker
-          onSelectContact={handleSelectFromNativeContacts}
+        {/* Selector unificado de contactos */}
+        <ContactSelector
+          contacts={favoriteContacts}
+          onSelectContact={handleSelectContact}
+          onSelectFromNative={handleSelectFromNativeContacts}
+          selectedPhone={phoneNumber}
         />
 
         {/* Input de teléfono */}

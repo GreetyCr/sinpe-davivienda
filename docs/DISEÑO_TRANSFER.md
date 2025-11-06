@@ -68,62 +68,49 @@ Crear una experiencia de transferencia **rápida**, **segura** y **moderna** par
 
 ## 🎨 Componentes Creados
 
-### 1. **ContactPicker** (180 líneas) - Selector Nativo
+### 1. **ContactSelector** (240 líneas) - Componente Unificado
 
 ```
 ┌─────────────────────────────────────┐
-│ 📇 Desde tus contactos              │
+│ 📇 Contactos                        │
 │                                     │
-│ ┌───────────────────────────────┐   │
-│ │  👤   Seleccionar de contactos│   │ ← Abre selector nativo
-│ │       Elige un contacto de    │   │
-│ │       tu iPhone/Android    →  │   │
-│ └───────────────────────────────┘   │
-│                                     │
-│ O escribe el número manualmente     │
+│ ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐ → │ ← Scroll horizontal
+│ │ + │ │ ⭐ │ │ MG │ │ CR │    │
+│ │Agre││ Ana │ │María│ │Carlos│   │
+│ │gar │ │8888 │ │8666 │ │8555 │   │
+│ └─────┘ └─────┘ └─────┘ └─────┘   │
 └─────────────────────────────────────┘
-        ↓ Tap
+    ↓ Tap "Agregar"
 ┌─────────────────────────────────────┐
-│ [Selector Nativo del Sistema]       │
-│                                     │
-│ Buscar                              │
-│ ┌───────────────────────────────┐   │
-│ │ Ana López                     │   │
-│ │ +506 8888-5555                │   │
-│ ├───────────────────────────────┤   │
-│ │ Carlos Ramírez                │   │
-│ │ +506 8888-6666                │   │
-│ ├───────────────────────────────┤   │
-│ │ María González                │   │
-│ │ +506 8888-7777                │   │
-│ └───────────────────────────────┘   │
-│                                     │
-│ [TODOS los contactos del teléfono]  │
+│ [Selector Nativo iOS/Android]       │
+│ Todos los contactos del teléfono    │
 └─────────────────────────────────────┘
 ```
 
-**Características:**
-- ✅ Usa el selector nativo del dispositivo (iOS/Android)
-- ✅ Acceso a TODOS los contactos del teléfono
-- ✅ Solicita permisos de forma segura
-- ✅ Auto-formato del número seleccionado (8888-7777)
-- ✅ Validación de 8 dígitos costarricenses
-- ✅ Extrae nombre automáticamente
-- ✅ Manejo de permisos denegados
-- ✅ Alertas informativas
-- ✅ Loading state durante apertura
+**Características Unificadas:**
+- ✅ **Scroll horizontal** con contactos frecuentes + botón agregar
+- ✅ **Botón "Agregar"** - Abre selector nativo (iOS/Android)
+- ✅ **Acceso completo** - TODOS los contactos del teléfono
+- ✅ **Compacto** - Todo en una sola línea (ahorro de espacio)
+- ✅ **Reutilizable** - Se puede usar en otras pantallas
+- ✅ **Auto-formato** - Números costarricenses (8888-7777)
+- ✅ **Validación** - 8 dígitos automática
+- ✅ **Permisos seguros** - Solicitados solo cuando se necesita
+- ✅ **Favoritos visibles** - Con estrella dorada
+- ✅ **Loading state** - Feedback durante apertura
+- ✅ **Sin scroll vertical** - Todo visible sin desplazar
 
 **UX Details:**
-- Botón grande y claro con icono
-- Pressed state visual
-- Texto adaptado a plataforma (iPhone/Android)
-- Permisos solicitados solo cuando se necesita
-- Fallback a escritura manual
-- Auto-limpieza de formato de números
+- Botón con borde punteado (dashed) para "agregar"
+- Cards de contactos con shadow y pressed state
+- Selección visual con check verde y border
+- Avatar con iniciales y colores únicos
+- Icono de estrella para favoritos
+- No requiere helper text (se sobre-entiende)
 
 ---
 
-### 2. **PhoneInput** (155 líneas)
+### 2. **PhoneInput** (155 líneas) - Validación Inteligente
 
 ```
 ┌─────────────────────────────────┐
@@ -152,7 +139,7 @@ Crear una experiencia de transferencia **rápida**, **segura** y **moderna** par
 
 ---
 
-### 3. **AmountInput** (170 líneas)
+### 3. **AmountInput** (170 líneas) - Montos Rápidos
 
 ```
 ┌─────────────────────────────────┐
@@ -184,7 +171,7 @@ Crear una experiencia de transferencia **rápida**, **segura** y **moderna** par
 
 ---
 
-### 4. **QuickContactSelector** (145 líneas)
+### 4. **TransferSummary** (210 líneas) - Modal de Confirmación
 
 ```
 ┌─────────────────────────────────────┐
@@ -215,7 +202,7 @@ Crear una experiencia de transferencia **rápida**, **segura** y **moderna** par
 
 ---
 
-### 5. **TransferSummary** (210 líneas)
+### 5. **SuccessModal** (175 líneas) - Modal de Éxito
 
 Modal de confirmación antes de enviar:
 
@@ -261,7 +248,38 @@ Modal de confirmación antes de enviar:
 
 ---
 
-### 6. **SuccessModal** (175 líneas)
+---
+
+## ✨ Mejoras de Diseño
+
+### Unificación de Componentes
+```
+ANTES:                          AHORA:
+┌──────────────────┐           ┌──────────────────┐
+│ Contactos        │           │ Contactos        │
+│ frecuentes       │           │ [+ Agregar] [Ana]│
+│ [Ana] [Carlos]   │           │ [María] [Carlos] │
+└──────────────────┘           └──────────────────┘
+                               ✅ TODO en 1 línea
+┌──────────────────┐           ✅ No scroll
+│ Desde tus        │           ✅ Más compacto
+│ contactos        │           ✅ Reutilizable
+│ [Seleccionar]    │
+└──────────────────┘
+
+SCROLL VERTICAL ❌           SIN SCROLL ✅
+```
+
+**Beneficios:**
+- ✅ **60% menos espacio** vertical
+- ✅ **Componente único** reutilizable
+- ✅ **Sin scroll** - Todo visible
+- ✅ **Más intuitivo** - Todo junto
+- ✅ **Mejor UX** - Menos fricción
+
+---
+
+### 6. **[Eliminado]** - Componentes Antiguos
 
 Modal celebratorio después de transferencia exitosa:
 
@@ -500,8 +518,10 @@ Total: 16 segundos ⚡
 
 | Métrica | Valor |
 |---------|-------|
-| **Componentes** | 6 |
-| **Líneas totales** | ~1,135 líneas |
+| **Componentes** | 5 (unificados) |
+| **Líneas totales** | ~950 líneas |
+| **Ahorro de código** | -185 líneas (-16%) |
+| **Ahorro de espacio** | ~60% vertical |
 | **Acceso a contactos** | TODOS los del dispositivo |
 | **Pantallas** | 1 + 2 modales |
 | **Pasos mínimos** | 3 (contacto + monto + confirmar) |
