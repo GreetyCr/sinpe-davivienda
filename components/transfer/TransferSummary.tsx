@@ -83,22 +83,6 @@ export const TransferSummary: React.FC<TransferSummaryProps> = ({
                   </View>
                 </View>
               )}
-
-              <View style={styles.detailRow}>
-                <Icon name="schedule" size={20} color={Colors.text.secondary} />
-                <View style={styles.detailContent}>
-                  <Text style={styles.detailLabel}>Fecha y hora</Text>
-                  <Text style={styles.detailValue}>
-                    {new Date().toLocaleString('es-CR', {
-                      day: '2-digit',
-                      month: 'short',
-                      year: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit',
-                    })}
-                  </Text>
-                </View>
-              </View>
             </View>
           </View>
 

@@ -58,7 +58,6 @@ Una experiencia de transferencia **rápida**, **segura** y **moderna** para jóv
 │  👤 Para: María González            │
 │  📞 Teléfono: +506 8888-7777        │
 │  📝 Descripción: Almuerzo           │
-│  🕐 Fecha: 6 nov 2025, 14:30        │
 │                                     │
 │  ℹ️ Esta operación es inmediata     │
 │     y no se puede revertir          │
@@ -189,7 +188,6 @@ Una experiencia de transferencia **rápida**, **segura** y **moderna** para jóv
 │  👤 Para: María González            │
 │  📞 Teléfono: +506 8888-7777        │
 │  📝 Descripción: Almuerzo           │
-│  🕐 Fecha: 6 nov 2025, 14:30        │
 │                                     │
 │  ℹ️ Esta operación es inmediata     │
 │                                     │
