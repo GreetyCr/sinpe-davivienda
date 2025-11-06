@@ -40,7 +40,7 @@
   
 - [ ] **OutlinedButton** - Botón con borde
   - Para acciones secundarias
-
+  
 ### 2.2 Componentes de Input
 - [ ] **CustomInput** - Input con validación
   - Soporte para números de teléfono (formato 8888-8888)
