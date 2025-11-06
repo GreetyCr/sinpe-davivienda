@@ -68,48 +68,58 @@ Crear una experiencia de transferencia **rápida**, **segura** y **moderna** par
 
 ## 🎨 Componentes Creados
 
-### 1. **ContactSearch** (190 líneas)
+### 1. **ContactPicker** (180 líneas) - Selector Nativo
 
 ```
 ┌─────────────────────────────────────┐
-│ 🔍 Buscar contactos                 │
+│ 📇 Desde tus contactos              │
 │                                     │
 │ ┌───────────────────────────────┐   │
-│ │ 🔍 Buscar por nombre o...     │   │
+│ │  👤   Seleccionar de contactos│   │ ← Abre selector nativo
+│ │       Elige un contacto de    │   │
+│ │       tu iPhone/Android    →  │   │
 │ └───────────────────────────────┘   │
 │                                     │
-│ [Cuando se busca:]                  │
+│ O escribe el número manualmente     │
+└─────────────────────────────────────┘
+        ↓ Tap
+┌─────────────────────────────────────┐
+│ [Selector Nativo del Sistema]       │
+│                                     │
+│ Buscar                              │
 │ ┌───────────────────────────────┐   │
-│ │ 🔍 maria              ✕       │   │ ← Expandido
+│ │ Ana López                     │   │
+│ │ +506 8888-5555                │   │
+│ ├───────────────────────────────┤   │
+│ │ Carlos Ramírez                │   │
+│ │ +506 8888-6666                │   │
+│ ├───────────────────────────────┤   │
+│ │ María González                │   │
+│ │ +506 8888-7777                │   │
 │ └───────────────────────────────┘   │
-│ ┌───────────────────────────────┐   │
-│ │ MG │ María González           │   │
-│ │    │ 8888-6666            ⭐  │   │
-│ ├────┼──────────────────────────┤   │
-│ │ MR │ María Rodríguez          │   │
-│ │    │ 8888-5555                │   │
-│ └───────────────────────────────┘   │
-│           [▲ Cerrar búsqueda]       │
+│                                     │
+│ [TODOS los contactos del teléfono]  │
 └─────────────────────────────────────┘
 ```
 
 **Características:**
-- ✅ Búsqueda en tiempo real
-- ✅ Filtra por nombre o teléfono
-- ✅ Lista expandible/colapsable
-- ✅ Avatar con iniciales
-- ✅ Indicador de favorito (⭐)
-- ✅ Check verde cuando seleccionado
-- ✅ Estado vacío cuando no hay resultados
-- ✅ Botón para cerrar búsqueda
-- ✅ Auto-scroll deshabilitado (FlatList)
+- ✅ Usa el selector nativo del dispositivo (iOS/Android)
+- ✅ Acceso a TODOS los contactos del teléfono
+- ✅ Solicita permisos de forma segura
+- ✅ Auto-formato del número seleccionado (8888-7777)
+- ✅ Validación de 8 dígitos costarricenses
+- ✅ Extrae nombre automáticamente
+- ✅ Manejo de permisos denegados
+- ✅ Alertas informativas
+- ✅ Loading state durante apertura
 
 **UX Details:**
-- Input con focus state rojo
-- Icono X para limpiar búsqueda
-- Resultados en card con shadow
-- Pressed state en items
-- Max height 300px con scroll interno
+- Botón grande y claro con icono
+- Pressed state visual
+- Texto adaptado a plataforma (iPhone/Android)
+- Permisos solicitados solo cuando se necesita
+- Fallback a escritura manual
+- Auto-limpieza de formato de números
 
 ---
 
@@ -491,7 +501,8 @@ Total: 16 segundos ⚡
 | Métrica | Valor |
 |---------|-------|
 | **Componentes** | 6 |
-| **Líneas totales** | ~1,145 líneas |
+| **Líneas totales** | ~1,135 líneas |
+| **Acceso a contactos** | TODOS los del dispositivo |
 | **Pantallas** | 1 + 2 modales |
 | **Pasos mínimos** | 3 (contacto + monto + confirmar) |
 | **Tiempo mínimo** | ~6 segundos |
@@ -503,7 +514,7 @@ Total: 16 segundos ⚡
 ## 🚀 Features Futuras (Nice to Have)
 
 ### Fase 2:
-- [ ] Búsqueda de contactos
+- [x] ✅ **Selector nativo de contactos** (Implementado con expo-contacts)
 - [ ] Historial de transferencias en mismo screen
 - [ ] Favoritos editables
 - [ ] Templates de monto (ej: "Mi renta ₡300k")

@@ -8,7 +8,7 @@ import {
   PhoneInput,
   AmountInput,
   QuickContactSelector,
-  ContactSearch,
+  ContactPicker,
   TransferSummary,
   SuccessModal,
 } from '@/components/transfer';
@@ -42,6 +42,22 @@ export default function TransferScreen() {
     setSelectedContact(contact);
     setPhoneNumber(contact.phoneNumber);
     setIsPhoneValid(true);
+  };
+
+  const handleSelectFromNativeContacts = (phoneNumber: string, name?: string) => {
+    setPhoneNumber(phoneNumber);
+    setIsPhoneValid(true);
+    // Crear contacto temporal si viene nombre
+    if (name) {
+      setSelectedContact({
+        id: 'temp-' + Date.now(),
+        name: name,
+        phoneNumber: phoneNumber,
+        isFavorite: false,
+      });
+    } else {
+      setSelectedContact(null);
+    }
   };
 
   const handleContinue = () => {
@@ -112,11 +128,9 @@ export default function TransferScreen() {
           />
         )}
 
-        {/* Buscar contactos */}
-        <ContactSearch
-          contacts={mockContacts}
-          onSelectContact={handleSelectContact}
-          selectedPhone={phoneNumber}
+        {/* Selector nativo de contactos */}
+        <ContactPicker
+          onSelectContact={handleSelectFromNativeContacts}
         />
 
         {/* Input de teléfono */}
