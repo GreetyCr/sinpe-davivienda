@@ -1,76 +1,293 @@
-import { View, StyleSheet, ScrollView } from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, ScrollView, Pressable, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
 import { Text } from 'react-native-paper';
-import { Colors } from '../../constants/Colors';
-import { Spacing } from '../../constants/Spacing';
+import { useRouter } from 'expo-router';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import { mockUser, mockContacts } from '@/utils/mockData';
+import {
+  PhoneInput,
+  AmountInput,
+  QuickContactSelector,
+  ContactSearch,
+  TransferSummary,
+  SuccessModal,
+} from '@/components/transfer';
+import { Colors } from '@/constants/Colors';
+import { Spacing, BorderRadius } from '@/constants/Spacing';
+import { Typography } from '@/constants/Typography';
+import { Contact } from '@/types';
 
 export default function TransferScreen() {
+  const router = useRouter();
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [amount, setAmount] = useState('');
+  const [description, setDescription] = useState('');
+  const [isPhoneValid, setIsPhoneValid] = useState(false);
+  const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
+  const [showSummary, setShowSummary] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  // Filtrar contactos favoritos para mostrar primero
+  const favoriteContacts = mockContacts
+    .filter((c) => c.isFavorite)
+    .sort((a, b) => {
+      if (!a.lastTransaction && !b.lastTransaction) return 0;
+      if (!a.lastTransaction) return 1;
+      if (!b.lastTransaction) return -1;
+      return b.lastTransaction.getTime() - a.lastTransaction.getTime();
+    });
+
+  const handleSelectContact = (contact: Contact) => {
+    setSelectedContact(contact);
+    setPhoneNumber(contact.phoneNumber);
+    setIsPhoneValid(true);
+  };
+
+  const handleContinue = () => {
+    const numericAmount = parseInt(amount);
+    if (isPhoneValid && numericAmount > 0 && numericAmount <= mockUser.balance) {
+      setShowSummary(true);
+    }
+  };
+
+  const handleConfirmTransfer = () => {
+    setIsProcessing(true);
+    
+    // Simular proceso de transferencia
+    setTimeout(() => {
+      setIsProcessing(false);
+      setShowSummary(false);
+      setShowSuccess(true);
+    }, 2000);
+  };
+
+  const handleCloseSuccess = () => {
+    setShowSuccess(false);
+    // Resetear formulario
+    setPhoneNumber('');
+    setAmount('');
+    setDescription('');
+    setSelectedContact(null);
+    setIsPhoneValid(false);
+  };
+
+  const handleViewHistory = () => {
+    setShowSuccess(false);
+    router.push('/history' as any);
+  };
+
+  const numericAmount = parseInt(amount) || 0;
+  const canContinue = isPhoneValid && numericAmount > 0 && numericAmount <= mockUser.balance;
+  const reference = `SINPE-${new Date().getFullYear()}${(new Date().getMonth() + 1).toString().padStart(2, '0')}${new Date().getDate().toString().padStart(2, '0')}-${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`;
+
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.content}>
-        <Text variant="headlineLarge" style={styles.title}>
-          💸 Transferir
-        </Text>
-        <Text variant="bodyLarge" style={styles.subtitle}>
-          Realizar transferencias SINPE
-        </Text>
-        
-        <View style={styles.infoBox}>
-          <Text variant="titleMedium" style={styles.infoTitle}>
-            Esta pantalla mostrará:
-          </Text>
-          <Text variant="bodyMedium" style={styles.infoText}>
-            • Input de número de teléfono o IBAN
-          </Text>
-          <Text variant="bodyMedium" style={styles.infoText}>
-            • Autocompletado de contactos frecuentes
-          </Text>
-          <Text variant="bodyMedium" style={styles.infoText}>
-            • Input de monto con validación
-          </Text>
-          <Text variant="bodyMedium" style={styles.infoText}>
-            • Input de descripción opcional
-          </Text>
-          <Text variant="bodyMedium" style={styles.infoText}>
-            • Preview y confirmación antes de enviar
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={100}
+    >
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.content}
+        keyboardShouldPersistTaps="handled"
+      >
+        {/* Saludo y saldo disponible */}
+        <View style={styles.header}>
+          <Text style={styles.greeting}>Enviar dinero</Text>
+          <View style={styles.balanceChip}>
+            <Icon name="account-balance-wallet" size={16} color={Colors.status.info} />
+            <Text style={styles.balanceText}>
+              Disponible: ₡{mockUser.balance.toLocaleString()}
+            </Text>
+          </View>
+        </View>
+
+        {/* Contactos rápidos */}
+        {favoriteContacts.length > 0 && (
+          <QuickContactSelector
+            contacts={favoriteContacts}
+            onSelectContact={handleSelectContact}
+            selectedPhone={phoneNumber}
+          />
+        )}
+
+        {/* Buscar contactos */}
+        <ContactSearch
+          contacts={mockContacts}
+          onSelectContact={handleSelectContact}
+          selectedPhone={phoneNumber}
+        />
+
+        {/* Input de teléfono */}
+        <PhoneInput
+          value={phoneNumber}
+          onChangeText={(text) => {
+            setPhoneNumber(text);
+            // Limpiar selección de contacto si cambia manualmente
+            if (selectedContact && text !== selectedContact.phoneNumber) {
+              setSelectedContact(null);
+            }
+          }}
+          onValidation={setIsPhoneValid}
+        />
+
+        {/* Input de monto */}
+        <AmountInput
+          value={amount}
+          onChangeText={setAmount}
+          maxAmount={mockUser.balance}
+        />
+
+        {/* Descripción opcional */}
+        <View style={styles.descriptionContainer}>
+          <Text style={styles.label}>Descripción (opcional)</Text>
+          <TextInput
+            style={styles.descriptionInput}
+            value={description}
+            onChangeText={setDescription}
+            placeholder="¿Para qué es este pago?"
+            placeholderTextColor={Colors.text.light}
+            maxLength={50}
+            multiline
+          />
+        </View>
+
+        {/* Botón continuar */}
+        <Pressable
+          style={[styles.continueButton, !canContinue && styles.continueButtonDisabled]}
+          onPress={handleContinue}
+          disabled={!canContinue}
+        >
+          <Text style={styles.continueButtonText}>Continuar</Text>
+          <Icon name="arrow-forward" size={20} color={Colors.complementary.white} />
+        </Pressable>
+
+        {/* Info de seguridad */}
+        <View style={styles.securityInfo}>
+          <Icon name="lock" size={16} color={Colors.status.success} />
+          <Text style={styles.securityText}>
+            Tus transferencias están protegidas y son instantáneas
           </Text>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+
+      {/* Modal de confirmación */}
+      <TransferSummary
+        visible={showSummary}
+        recipientName={selectedContact?.name}
+        recipientPhone={phoneNumber}
+        amount={numericAmount}
+        description={description}
+        onConfirm={handleConfirmTransfer}
+        onCancel={() => setShowSummary(false)}
+        isProcessing={isProcessing}
+      />
+
+      {/* Modal de éxito */}
+      <SuccessModal
+        visible={showSuccess}
+        recipientName={selectedContact?.name}
+        amount={numericAmount}
+        reference={reference}
+        onClose={handleCloseSuccess}
+        onViewHistory={handleViewHistory}
+      />
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background.primary,
+    backgroundColor: Colors.background.secondary,
+  },
+  scrollView: {
+    flex: 1,
   },
   content: {
     padding: Spacing.lg,
+    paddingBottom: Spacing['3xl'],
   },
-  title: {
-    color: Colors.primary.red,
-    fontWeight: 'bold',
+  header: {
+    marginBottom: Spacing.lg,
+  },
+  greeting: {
+    fontSize: Typography.sizes['2xl'],
+    fontWeight: Typography.weights.bold,
+    color: Colors.text.primary,
     marginBottom: Spacing.sm,
   },
-  subtitle: {
-    color: Colors.text.secondary,
-    marginBottom: Spacing.xl,
+  balanceChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    backgroundColor: `${Colors.status.info}15`,
+    paddingVertical: Spacing.xs,
+    paddingHorizontal: Spacing.md,
+    borderRadius: BorderRadius.md,
+    gap: Spacing.xs,
   },
-  infoBox: {
-    backgroundColor: Colors.background.secondary,
-    padding: Spacing.md,
-    borderRadius: 12,
-    borderLeftWidth: 4,
-    borderLeftColor: Colors.primary.blue,
+  balanceText: {
+    fontSize: Typography.sizes.sm,
+    color: Colors.status.info,
+    fontWeight: Typography.weights.semibold,
   },
-  infoTitle: {
+  descriptionContainer: {
+    marginBottom: Spacing.lg,
+  },
+  label: {
+    fontSize: Typography.sizes.md,
+    fontWeight: Typography.weights.semibold,
     color: Colors.text.primary,
-    fontWeight: 'bold',
-    marginBottom: Spacing.md,
+    marginBottom: Spacing.sm,
   },
-  infoText: {
+  descriptionInput: {
+    backgroundColor: Colors.background.primary,
+    borderRadius: BorderRadius.md,
+    borderWidth: 2,
+    borderColor: Colors.ui.border,
+    paddingHorizontal: Spacing.md,
+    paddingVertical: Spacing.md,
+    fontSize: Typography.sizes.base,
+    color: Colors.text.primary,
+    minHeight: 60,
+    textAlignVertical: 'top',
+  },
+  continueButton: {
+    flexDirection: 'row',
+    backgroundColor: Colors.primary.red,
+    paddingVertical: Spacing.md,
+    borderRadius: BorderRadius.md,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: Spacing.sm,
+    marginBottom: Spacing.md,
+    shadowColor: Colors.primary.red,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+  continueButtonDisabled: {
+    backgroundColor: Colors.text.light,
+    shadowOpacity: 0,
+    elevation: 0,
+  },
+  continueButtonText: {
+    fontSize: Typography.sizes.lg,
+    fontWeight: Typography.weights.bold,
+    color: Colors.complementary.white,
+  },
+  securityInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: Spacing.xs,
+    paddingTop: Spacing.sm,
+  },
+  securityText: {
+    fontSize: Typography.sizes.xs,
     color: Colors.text.secondary,
-    marginBottom: Spacing.xs,
   },
 });
-
