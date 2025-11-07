@@ -189,7 +189,7 @@ export const ContactSelector: React.FC<ContactSelectorProps> = ({
             <View style={styles.selectIconCircle}>
               <Icon 
                 name={isLoadingNative ? "hourglass-empty" : "person-search"} 
-                size={24} 
+                size={20} 
                 color={Colors.complementary.white} 
               />
             </View>
@@ -335,11 +335,11 @@ const styles = StyleSheet.create({
     gap: Spacing.md,
   },
   leftColumn: {
-    flex: 0.28,
-    gap: Spacing.sm,
+    flex: 0.22,
+    gap: Spacing.xs,
   },
   rightColumn: {
-    flex: 0.72,
+    flex: 0.78,
     gap: Spacing.sm,
   },
   divider: {
@@ -351,10 +351,10 @@ const styles = StyleSheet.create({
     marginHorizontal: Spacing.xs,
   },
   columnTitle: {
-    fontSize: Typography.sizes.base,
+    fontSize: Typography.sizes.sm,
     fontWeight: Typography.weights.bold,
     color: Colors.complementary.white,
-    marginBottom: Spacing.xs,
+    marginBottom: 2,
   },
   favoritesHeader: {
     flexDirection: 'row',
@@ -379,34 +379,35 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     gap: Spacing.md,
+    paddingVertical: Spacing.xs,
   },
   // Card de seleccionar contacto
   selectContactCard: {
     flex: 1,
     backgroundColor: 'rgba(255, 255, 255, 0.25)',
-    borderRadius: BorderRadius.lg,
-    padding: Spacing.md,
+    borderRadius: BorderRadius.md,
+    padding: Spacing.sm,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 2,
+    borderWidth: 1.5,
     borderColor: Colors.complementary.white,
-    minHeight: 120,
-    gap: Spacing.sm,
+    minHeight: 90,
+    gap: Spacing.xs,
   },
   selectIconCircle: {
-    width: 48,
-    height: 48,
-    borderRadius: BorderRadius.lg,
+    width: 40,
+    height: 40,
+    borderRadius: BorderRadius.md,
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   selectContactText: {
-    fontSize: Typography.sizes.sm,
-    fontWeight: Typography.weights.bold,
+    fontSize: Typography.sizes.xs,
+    fontWeight: Typography.weights.semibold,
     color: Colors.complementary.white,
     textAlign: 'center',
-    lineHeight: 18,
+    lineHeight: 14,
   },
   // Cards de contactos
   contactCard: {
@@ -432,11 +433,16 @@ const styles = StyleSheet.create({
   },
   removeButton: {
     position: 'absolute',
-    top: -8,
-    right: -8,
+    top: 4,
+    right: 4,
     zIndex: 10,
     backgroundColor: Colors.complementary.white,
     borderRadius: 12,
+    shadowColor: Colors.ui.shadow,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 2,
   },
   favoriteBadge: {
     position: 'absolute',
