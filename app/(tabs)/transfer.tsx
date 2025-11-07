@@ -7,7 +7,8 @@ import { mockUser, mockContacts } from '@/utils/mockData';
 import {
   PhoneInput,
   AmountInput,
-  ContactSelector,
+  NativeContactPicker,
+  FavoriteContacts,
   TransferSummary,
   SuccessModal,
 } from '@/components/transfer';
@@ -87,6 +88,19 @@ export default function TransferScreen() {
     setIsPhoneValid(false);
   };
 
+  const handleRemoveFavorite = (contactId: string) => {
+    // Aquí se implementaría la lógica real de eliminar del backend
+    // Por ahora solo mostramos un mensaje
+    console.log('Eliminar favorito:', contactId);
+    // TODO: Implementar lógica de eliminación cuando haya backend
+  };
+
+  const handleAddFavorite = () => {
+    // Aquí se abriría un modal o pantalla para agregar un nuevo favorito
+    console.log('Agregar nuevo favorito');
+    // TODO: Implementar modal de agregar favorito
+  };
+
   const handleViewHistory = () => {
     setShowSuccess(false);
     router.push('/history' as any);
@@ -118,13 +132,21 @@ export default function TransferScreen() {
           </View>
         </View>
 
-        {/* Selector unificado de contactos */}
-        <ContactSelector
-          contacts={favoriteContacts}
-          onSelectContact={handleSelectContact}
-          onSelectFromNative={handleSelectFromNativeContacts}
-          selectedPhone={phoneNumber}
+        {/* Selector nativo de contactos */}
+        <NativeContactPicker
+          onSelectContact={handleSelectFromNativeContacts}
         />
+
+        {/* Contactos favoritos con edición */}
+        {favoriteContacts.length > 0 && (
+          <FavoriteContacts
+            contacts={favoriteContacts}
+            onSelectContact={handleSelectContact}
+            onRemoveFavorite={handleRemoveFavorite}
+            onAddFavorite={handleAddFavorite}
+            selectedPhone={phoneNumber}
+          />
+        )}
 
         {/* Input de teléfono */}
         <PhoneInput
