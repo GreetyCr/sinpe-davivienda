@@ -398,8 +398,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderWidth: 2,
     borderColor: Colors.complementary.white,
-    height: 110,
+    height: 95,
     gap: Spacing.xs,
+    marginTop: Spacing.xs,
   },
   selectIconCircle: {
     width: 36,

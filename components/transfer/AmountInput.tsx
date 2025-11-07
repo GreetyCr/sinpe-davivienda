@@ -38,7 +38,7 @@ export const AmountInput: React.FC<AmountInputProps> = ({
   const exceedsMax = maxAmount && numericValue > maxAmount;
 
   // Montos rápidos sugeridos
-  const quickAmounts = [5000, 10000, 25000, 50000];
+  const quickAmounts = [1000, 2000, 5000, 10000];
 
   const handleQuickAmount = (amount: number) => {
     onChangeText(amount.toString());
@@ -88,7 +88,6 @@ export const AmountInput: React.FC<AmountInputProps> = ({
 
       {/* Montos rápidos */}
       <View style={styles.quickAmountsContainer}>
-        <Text style={styles.quickAmountsLabel}>Montos rápidos:</Text>
         <View style={styles.quickAmounts}>
           {quickAmounts.map((amount) => (
             <View key={amount} style={styles.quickAmountWrapper}>
@@ -168,13 +167,7 @@ const styles = StyleSheet.create({
     marginLeft: Spacing.xs,
   },
   quickAmountsContainer: {
-    marginTop: Spacing.lg,
-  },
-  quickAmountsLabel: {
-    fontSize: Typography.sizes.sm,
-    color: Colors.text.secondary,
-    marginBottom: Spacing.sm,
-    fontWeight: Typography.weights.medium,
+    marginTop: Spacing.xs,
   },
   quickAmounts: {
     flexDirection: 'row',
