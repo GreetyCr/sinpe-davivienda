@@ -172,140 +172,148 @@ export const ContactSelector: React.FC<ContactSelectorProps> = ({
 
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <View style={styles.headerLeft}>
-          <Icon name="contacts" size={20} color={Colors.complementary.white} />
-          <Text style={styles.title}>Contactos</Text>
-        </View>
-        {contacts.length > 0 && (
+      <View style={styles.columnsWrapper}>
+        {/* Columna izquierda: Contactos */}
+        <View style={styles.leftColumn}>
+          <Text style={styles.columnTitle}>Contactos</Text>
+          
           <Pressable
             style={({ pressed }) => [
-              styles.editButton,
-              pressed && styles.editButtonPressed,
-            ]}
-            onPress={toggleEditMode}
-          >
-            <Text style={styles.editButtonText}>
-              {isEditMode ? 'Listo' : 'Editar'}
-            </Text>
-          </Pressable>
-        )}
-      </View>
-
-      {/* Scroll horizontal con todas las opciones */}
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
-      >
-        {/* Primera card: Seleccionar contacto */}
-        <Pressable
-          style={({ pressed }) => [
-            styles.selectContactCard,
-            pressed && styles.cardPressed,
-            isLoadingNative && styles.cardDisabled,
-          ]}
-          onPress={handleOpenContacts}
-          disabled={isLoadingNative || isEditMode}
-        >
-          <View style={styles.selectIconCircle}>
-            <Icon 
-              name={isLoadingNative ? "hourglass-empty" : "person-search"} 
-              size={28} 
-              color={Colors.complementary.white} 
-            />
-          </View>
-          <Text style={styles.selectContactText} numberOfLines={2}>
-            {isLoadingNative ? 'Abriendo...' : 'Seleccionar\ncontacto'}
-          </Text>
-        </Pressable>
-
-        {/* Cards de contactos favoritos */}
-        {contacts.map((contact) => {
-          const isSelected = selectedPhone === contact.phoneNumber;
-          const avatarColor = getAvatarColor(contact.name);
-
-          return (
-            <Pressable
-              key={contact.id}
-              style={({ pressed }) => [
-                styles.contactCard,
-                isSelected && styles.contactCardSelected,
-                pressed && !isEditMode && styles.cardPressed,
-              ]}
-              onPress={() => !isEditMode && onSelectContact(contact)}
-              disabled={isEditMode}
-            >
-              {/* X de eliminar en modo edición */}
-              {isEditMode && (
-                <Pressable
-                  style={styles.removeButton}
-                  onPress={() => handleRemoveFavorite(contact)}
-                >
-                  <Icon name="cancel" size={24} color={Colors.status.error} />
-                </Pressable>
-              )}
-
-              {/* Estrella de favorito */}
-              {!isEditMode && contact.isFavorite && (
-                <View style={styles.favoriteBadge}>
-                  <Icon name="star" size={12} color={Colors.primary.yellow} />
-                </View>
-              )}
-
-              <View
-                style={[
-                  styles.avatar,
-                  { backgroundColor: `${avatarColor}20` },
-                  isSelected && { backgroundColor: avatarColor },
-                ]}
-              >
-                <Text
-                  style={[
-                    styles.initials,
-                    { color: avatarColor },
-                    isSelected && { color: Colors.complementary.white },
-                  ]}
-                >
-                  {getInitials(contact.name)}
-                </Text>
-              </View>
-
-              <Text style={styles.contactName} numberOfLines={1}>
-                {contact.name.split(' ')[0]}
-              </Text>
-              <Text style={styles.contactPhone} numberOfLines={1}>
-                {contact.phoneNumber}
-              </Text>
-
-              {isSelected && !isEditMode && (
-                <View style={styles.selectedIndicator}>
-                  <Icon name="check-circle" size={20} color={Colors.status.success} />
-                </View>
-              )}
-            </Pressable>
-          );
-        })}
-
-        {/* Última card: Agregar favorito (solo fuera de modo edición) */}
-        {!isEditMode && (
-          <Pressable
-            style={({ pressed }) => [
-              styles.addFavoriteCard,
+              styles.selectContactCard,
               pressed && styles.cardPressed,
+              isLoadingNative && styles.cardDisabled,
             ]}
-            onPress={onAddFavorite}
+            onPress={handleOpenContacts}
+            disabled={isLoadingNative || isEditMode}
           >
-            <View style={styles.addIconCircle}>
-              <Icon name="person-add" size={28} color={Colors.complementary.white} />
+            <View style={styles.selectIconCircle}>
+              <Icon 
+                name={isLoadingNative ? "hourglass-empty" : "person-search"} 
+                size={32} 
+                color={Colors.complementary.white} 
+              />
             </View>
-            <Text style={styles.addFavoriteText} numberOfLines={2}>
-              Agregar{'\n'}favorito
+            <Text style={styles.selectContactText}>
+              {isLoadingNative ? 'Abriendo...' : 'Seleccionar\ncontacto'}
             </Text>
           </Pressable>
-        )}
-      </ScrollView>
+        </View>
+
+        {/* Separador vertical */}
+        <View style={styles.divider} />
+
+        {/* Columna derecha: Favoritos */}
+        <View style={styles.rightColumn}>
+          <View style={styles.favoritesHeader}>
+            <Text style={styles.columnTitle}>Favoritos</Text>
+            {contacts.length > 0 && (
+              <Pressable
+                style={({ pressed }) => [
+                  styles.editButton,
+                  pressed && styles.editButtonPressed,
+                ]}
+                onPress={toggleEditMode}
+              >
+                <Text style={styles.editButtonText}>
+                  {isEditMode ? 'Listo' : 'Editar'}
+                </Text>
+              </Pressable>
+            )}
+          </View>
+
+          {/* Scroll horizontal de favoritos */}
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.scrollContent}
+          >
+            {/* Cards de contactos favoritos */}
+            {contacts.map((contact) => {
+              const isSelected = selectedPhone === contact.phoneNumber;
+              const avatarColor = getAvatarColor(contact.name);
+
+              return (
+                <Pressable
+                  key={contact.id}
+                  style={({ pressed }) => [
+                    styles.contactCard,
+                    isSelected && styles.contactCardSelected,
+                    pressed && !isEditMode && styles.cardPressed,
+                  ]}
+                  onPress={() => !isEditMode && onSelectContact(contact)}
+                  disabled={isEditMode}
+                >
+                  {/* X de eliminar en modo edición */}
+                  {isEditMode && (
+                    <Pressable
+                      style={styles.removeButton}
+                      onPress={() => handleRemoveFavorite(contact)}
+                    >
+                      <Icon name="cancel" size={24} color={Colors.status.error} />
+                    </Pressable>
+                  )}
+
+                  {/* Estrella de favorito */}
+                  {!isEditMode && contact.isFavorite && (
+                    <View style={styles.favoriteBadge}>
+                      <Icon name="star" size={12} color={Colors.primary.yellow} />
+                    </View>
+                  )}
+
+                  <View
+                    style={[
+                      styles.avatar,
+                      { backgroundColor: `${avatarColor}20` },
+                      isSelected && { backgroundColor: avatarColor },
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        styles.initials,
+                        { color: avatarColor },
+                        isSelected && { color: Colors.complementary.white },
+                      ]}
+                    >
+                      {getInitials(contact.name)}
+                    </Text>
+                  </View>
+
+                  <Text style={styles.contactName} numberOfLines={1}>
+                    {contact.name.split(' ')[0]}
+                  </Text>
+                  <Text style={styles.contactPhone} numberOfLines={1}>
+                    {contact.phoneNumber}
+                  </Text>
+
+                  {isSelected && !isEditMode && (
+                    <View style={styles.selectedIndicator}>
+                      <Icon name="check-circle" size={20} color={Colors.status.success} />
+                    </View>
+                  )}
+                </Pressable>
+              );
+            })}
+
+            {/* Última card: Agregar favorito (solo fuera de modo edición) */}
+            {!isEditMode && (
+              <Pressable
+                style={({ pressed }) => [
+                  styles.addFavoriteCard,
+                  pressed && styles.cardPressed,
+                ]}
+                onPress={onAddFavorite}
+              >
+                <View style={styles.addIconCircle}>
+                  <Icon name="person-add" size={28} color={Colors.complementary.white} />
+                </View>
+                <Text style={styles.addFavoriteText} numberOfLines={2}>
+                  Agregar{'\n'}favorito
+                </Text>
+              </Pressable>
+            )}
+          </ScrollView>
+        </View>
+      </View>
     </View>
   );
 };
@@ -314,7 +322,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.primary.red,
     borderRadius: BorderRadius.lg,
-    padding: Spacing.md,
+    padding: Spacing.lg,
     marginBottom: Spacing.lg,
     shadowColor: Colors.ui.shadow,
     shadowOffset: { width: 0, height: 4 },
@@ -322,27 +330,44 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 5,
   },
-  header: {
+  columnsWrapper: {
+    flexDirection: 'row',
+    gap: Spacing.lg,
+  },
+  leftColumn: {
+    flex: 0.35,
+    gap: Spacing.md,
+  },
+  rightColumn: {
+    flex: 0.65,
+    gap: Spacing.md,
+  },
+  divider: {
+    width: 2,
+    backgroundColor: 'transparent',
+    borderLeftWidth: 2,
+    borderLeftColor: Colors.complementary.white,
+    borderStyle: 'dashed',
+    marginHorizontal: Spacing.xs,
+  },
+  columnTitle: {
+    fontSize: Typography.sizes.lg,
+    fontWeight: Typography.weights.bold,
+    color: Colors.complementary.white,
+    marginBottom: Spacing.xs,
+  },
+  favoritesHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: Spacing.md,
-  },
-  headerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: Typography.sizes.base,
-    fontWeight: Typography.weights.bold,
-    color: Colors.complementary.white,
-    marginLeft: Spacing.xs,
   },
   editButton: {
     paddingVertical: Spacing.xs,
     paddingHorizontal: Spacing.md,
-    borderRadius: BorderRadius.sm,
+    borderRadius: BorderRadius.md,
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderWidth: 1,
+    borderColor: Colors.complementary.white,
   },
   editButtonPressed: {
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
@@ -357,29 +382,31 @@ const styles = StyleSheet.create({
   },
   // Card de seleccionar contacto
   selectContactCard: {
-    width: 100,
+    flex: 1,
     backgroundColor: 'rgba(255, 255, 255, 0.25)',
     borderRadius: BorderRadius.lg,
-    padding: Spacing.md,
+    padding: Spacing.xl,
     alignItems: 'center',
+    justifyContent: 'center',
     borderWidth: 2,
     borderColor: Colors.complementary.white,
+    minHeight: 160,
+    gap: Spacing.md,
   },
   selectIconCircle: {
-    width: 48,
-    height: 48,
-    borderRadius: BorderRadius.lg,
+    width: 60,
+    height: 60,
+    borderRadius: BorderRadius.xl,
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: Spacing.sm,
   },
   selectContactText: {
-    fontSize: Typography.sizes.sm,
+    fontSize: Typography.sizes.base,
     fontWeight: Typography.weights.bold,
     color: Colors.complementary.white,
     textAlign: 'center',
-    lineHeight: 16,
+    lineHeight: 20,
   },
   // Cards de contactos
   contactCard: {
