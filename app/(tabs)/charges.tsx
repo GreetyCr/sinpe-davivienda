@@ -202,28 +202,30 @@ export default function TransferScreen() {
           </Pressable>
         </View>
 
-        {/* Selector unificado de contactos */}
-        <ContactSelector
-          contacts={favoriteContacts}
-          onSelectContact={handleSelectContact}
-          onSelectFromNative={handleSelectFromNativeContacts}
-          onRemoveFavorite={handleRemoveFavorite}
-          onAddFavorite={handleAddFavorite}
-          selectedPhone={phoneNumber}
-        />
+{method === 'sms' && (
+  <>
+    <ContactSelector
+      contacts={favoriteContacts}
+      onSelectContact={handleSelectContact}
+      onSelectFromNative={handleSelectFromNativeContacts}
+      onRemoveFavorite={handleRemoveFavorite}
+      onAddFavorite={handleAddFavorite}
+      selectedPhone={phoneNumber}
+    />
 
-        {/* Input de teléfono */}
-        <PhoneInput
-          value={phoneNumber}
-          onChangeText={(text) => {
-            setPhoneNumber(text);
-            // Limpiar selección de contacto si cambia manualmente
-            if (selectedContact && text !== selectedContact.phoneNumber) {
-              setSelectedContact(null);
-            }
-          }}
-          onValidation={setIsPhoneValid}
-        />
+    <PhoneInput
+      value={phoneNumber}
+      onChangeText={(text) => {
+        setPhoneNumber(text);
+        if (selectedContact && text !== selectedContact.phoneNumber) {
+          setSelectedContact(null);
+        }
+      }}
+      onValidation={setIsPhoneValid}
+    />
+  </>
+)}
+
 
         {/* Input de monto */}
         <AmountInput
@@ -246,22 +248,31 @@ export default function TransferScreen() {
           />
         </View>
 
-        {/* Botón continuar */}
-        <Pressable
-          style={[
-            styles.continueButton,
-            !canContinue && styles.continueButtonDisabled,
-          ]}
-          onPress={handleContinue}
-          disabled={!canContinue}
-        >
-          <Text style={styles.continueButtonText}>Continuar</Text>
-          <Icon
-            name="arrow-forward"
-            size={20}
-            color={Colors.complementary.white}
-          />
-        </Pressable>
+{/* Botones de acción */}
+<View style={styles.actionRow}>
+  <Pressable
+    style={[styles.cancelButton]}
+    onPress={handleCloseSuccess} // o la función que quieras para cancelar
+  >
+    <Text style={styles.cancelButtonText}>Cancelar</Text>
+  </Pressable>
+
+  <Pressable
+    style={[styles.continueButton]} // siempre rojo
+    onPress={handleContinue}
+  >
+    <Text style={styles.continueButtonText}>
+      {method === 'qr' ? 'Generar QR' : 'Enviar cobro'}
+    </Text>
+    <Icon
+      name={method === 'qr' ? 'qr-code-2' : 'arrow-forward'}
+      size={20}
+      color={Colors.complementary.white}
+    />
+  </Pressable>
+</View>
+
+
 
         {/* Info de seguridad */}
         <View style={styles.securityInfo}>
@@ -354,21 +365,6 @@ const styles = StyleSheet.create({
     minHeight: 60,
     textAlignVertical: "top",
   },
-  continueButton: {
-    flexDirection: "row",
-    backgroundColor: Colors.primary.red,
-    paddingVertical: Spacing.md,
-    borderRadius: BorderRadius.md,
-    alignItems: "center",
-    justifyContent: "center",
-    gap: Spacing.sm,
-    marginBottom: Spacing.md,
-    shadowColor: Colors.primary.red,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 6,
-  },
   continueButtonDisabled: {
     backgroundColor: Colors.text.light,
     shadowOpacity: 0,
@@ -420,4 +416,39 @@ const styles = StyleSheet.create({
   methodTextActive: {
     color: Colors.complementary.white,
   },
+  actionRow: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  marginBottom: Spacing.md,
+  gap: Spacing.sm,
+},
+cancelButton: {
+  flex: 1,
+  backgroundColor: Colors.text.light, // gris claro
+  borderRadius: BorderRadius.md,
+  alignItems: 'center',
+  justifyContent: 'center',
+  paddingVertical: Spacing.md,
+},
+cancelButtonText: {
+  fontSize: Typography.sizes.lg,
+  fontWeight: Typography.weights.bold,
+  color: Colors.text.primary, // texto gris oscuro o negro
+},
+continueButton: {
+  flex: 1,
+  flexDirection: 'row',
+  backgroundColor: Colors.primary.red, // siempre rojo
+  paddingVertical: Spacing.md,
+  borderRadius: BorderRadius.md,
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: Spacing.sm,
+  shadowColor: Colors.primary.red,
+  shadowOffset: { width: 0, height: 4 },
+  shadowOpacity: 0.3,
+  shadowRadius: 8,
+  elevation: 6,
+},
+
 });
