@@ -25,6 +25,8 @@ import { Typography } from "@/constants/Typography";
 import { Contact } from "@/types";
 import { ChargesHeader } from "@/components/charges/ChargesHeader";
 import { MethodSelector } from "@/components/charges/MethodSelector";
+import { DescriptionField } from "@/components/charges/DescriptionField";
+import { ActionButtons } from "@/components/charges/ActionButtons";
 
 export default function TransferScreen() {
   const router = useRouter();
@@ -181,74 +183,14 @@ export default function TransferScreen() {
           maxAmount={mockUser.balance}
         />
 
-        {/* Descripción opcional */}
-        <View style={styles.descriptionContainer}>
-          <Text style={styles.label}>Descripción (opcional)</Text>
-          <TextInput
-            style={styles.descriptionInput}
-            value={description}
-            onChangeText={setDescription}
-            placeholder="¿Para qué es este pago?"
-            placeholderTextColor={Colors.text.light}
-            maxLength={50}
-            multiline
-          />
-        </View>
+        <DescriptionField value={description} onChangeText={setDescription} />
 
-        {/* Botones de acción */}
-        <View style={styles.actionRow}>
-          <Pressable
-            style={[styles.cancelButton]}
-            onPress={handleCloseSuccess} // o la función que quieras para cancelar
-          >
-            <Text style={styles.cancelButtonText}>Cancelar</Text>
-          </Pressable>
-
-          <Pressable
-            style={[styles.continueButton]} // siempre rojo
-            onPress={handleContinue}
-          >
-            <Text style={styles.continueButtonText}>
-              {method === "qr" ? "Generar QR" : "Enviar cobro"}
-            </Text>
-            <Icon
-              name={method === "qr" ? "qr-code-2" : "arrow-forward"}
-              size={20}
-              color={Colors.complementary.white}
-            />
-          </Pressable>
-        </View>
-
-        {/* Info de seguridad */}
-        <View style={styles.securityInfo}>
-          <Icon name="lock" size={16} color={Colors.status.success} />
-          <Text style={styles.securityText}>
-            Tus transferencias están protegidas y son instantáneas
-          </Text>
-        </View>
+        <ActionButtons
+          method={method}
+          onCancel={handleCloseSuccess}
+          onContinue={handleContinue}
+        />
       </ScrollView>
-
-      {/* Modal de confirmación */}
-      <TransferSummary
-        visible={showSummary}
-        recipientName={selectedContact?.name}
-        recipientPhone={phoneNumber}
-        amount={numericAmount}
-        description={description}
-        onConfirm={handleConfirmTransfer}
-        onCancel={() => setShowSummary(false)}
-        isProcessing={isProcessing}
-      />
-
-      {/* Modal de éxito */}
-      <SuccessModal
-        visible={showSuccess}
-        recipientName={selectedContact?.name}
-        amount={numericAmount}
-        reference={reference}
-        onClose={handleCloseSuccess}
-        onViewHistory={handleViewHistory}
-      />
     </KeyboardAvoidingView>
   );
 }
@@ -288,81 +230,5 @@ const styles = StyleSheet.create({
     fontSize: Typography.sizes.sm,
     color: Colors.status.info,
     fontWeight: Typography.weights.semibold,
-  },
-  descriptionContainer: {
-    marginBottom: Spacing.lg,
-  },
-  label: {
-    fontSize: Typography.sizes.md,
-    fontWeight: Typography.weights.semibold,
-    color: Colors.text.primary,
-    marginBottom: Spacing.sm,
-  },
-  descriptionInput: {
-    backgroundColor: Colors.background.primary,
-    borderRadius: BorderRadius.md,
-    borderWidth: 2,
-    borderColor: Colors.ui.border,
-    paddingHorizontal: Spacing.md,
-    paddingVertical: Spacing.md,
-    fontSize: Typography.sizes.base,
-    color: Colors.text.primary,
-    minHeight: 60,
-    textAlignVertical: "top",
-  },
-  continueButtonDisabled: {
-    backgroundColor: Colors.text.light,
-    shadowOpacity: 0,
-    elevation: 0,
-  },
-  continueButtonText: {
-    fontSize: Typography.sizes.lg,
-    fontWeight: Typography.weights.bold,
-    color: Colors.complementary.white,
-  },
-  securityInfo: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: Spacing.xs,
-    paddingTop: Spacing.sm,
-  },
-  securityText: {
-    fontSize: Typography.sizes.xs,
-    color: Colors.text.secondary,
-  },
-  actionRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: Spacing.md,
-    gap: Spacing.sm,
-  },
-  cancelButton: {
-    flex: 1,
-    backgroundColor: Colors.text.light, // gris claro
-    borderRadius: BorderRadius.md,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: Spacing.md,
-  },
-  cancelButtonText: {
-    fontSize: Typography.sizes.lg,
-    fontWeight: Typography.weights.bold,
-    color: Colors.text.primary, // texto gris oscuro o negro
-  },
-  continueButton: {
-    flex: 1,
-    flexDirection: "row",
-    backgroundColor: Colors.primary.red, // siempre rojo
-    paddingVertical: Spacing.md,
-    borderRadius: BorderRadius.md,
-    alignItems: "center",
-    justifyContent: "center",
-    gap: Spacing.sm,
-    shadowColor: Colors.primary.red,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 6,
   },
 });
