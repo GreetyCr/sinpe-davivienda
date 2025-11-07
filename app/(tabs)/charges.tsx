@@ -24,6 +24,7 @@ import { Spacing, BorderRadius } from "@/constants/Spacing";
 import { Typography } from "@/constants/Typography";
 import { Contact } from "@/types";
 import { ChargesHeader } from "@/components/charges/ChargesHeader";
+import { MethodSelector } from "@/components/charges/MethodSelector";
 
 export default function TransferScreen() {
   const router = useRouter();
@@ -147,85 +148,31 @@ export default function TransferScreen() {
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
       >
-        <ChargesHeader user={mockUser} />
-        <View style={styles.methodContainer}>
-          <Pressable
-            style={[
-              styles.methodButton,
-              method === "qr" && styles.methodActive,
-            ]}
-            onPress={() => setMethod("qr")}
-          >
-            <Icon
-              name="qr-code-2"
-              size={28}
-              color={
-                method === "qr"
-                  ? Colors.complementary.white
-                  : Colors.text.primary
-              }
+        <MethodSelector method={method} onChange={setMethod} />
+
+        {method === "sms" && (
+          <>
+            <ContactSelector
+              contacts={favoriteContacts}
+              onSelectContact={handleSelectContact}
+              onSelectFromNative={handleSelectFromNativeContacts}
+              onRemoveFavorite={handleRemoveFavorite}
+              onAddFavorite={handleAddFavorite}
+              selectedPhone={phoneNumber}
             />
-            <Text
-              style={[
-                styles.methodText,
-                method === "qr" && styles.methodTextActive,
-              ]}
-            >
-              QR
-            </Text>
-          </Pressable>
 
-          <Pressable
-            style={[
-              styles.methodButton,
-              method === "sms" && styles.methodActive,
-            ]}
-            onPress={() => setMethod("sms")}
-          >
-            <Icon
-              name="sms"
-              size={26}
-              color={
-                method === "sms"
-                  ? Colors.complementary.white
-                  : Colors.text.primary
-              }
+            <PhoneInput
+              value={phoneNumber}
+              onChangeText={(text) => {
+                setPhoneNumber(text);
+                if (selectedContact && text !== selectedContact.phoneNumber) {
+                  setSelectedContact(null);
+                }
+              }}
+              onValidation={setIsPhoneValid}
             />
-            <Text
-              style={[
-                styles.methodText,
-                method === "sms" && styles.methodTextActive,
-              ]}
-            >
-              SMS
-            </Text>
-          </Pressable>
-        </View>
-
-{method === 'sms' && (
-  <>
-    <ContactSelector
-      contacts={favoriteContacts}
-      onSelectContact={handleSelectContact}
-      onSelectFromNative={handleSelectFromNativeContacts}
-      onRemoveFavorite={handleRemoveFavorite}
-      onAddFavorite={handleAddFavorite}
-      selectedPhone={phoneNumber}
-    />
-
-    <PhoneInput
-      value={phoneNumber}
-      onChangeText={(text) => {
-        setPhoneNumber(text);
-        if (selectedContact && text !== selectedContact.phoneNumber) {
-          setSelectedContact(null);
-        }
-      }}
-      onValidation={setIsPhoneValid}
-    />
-  </>
-)}
-
+          </>
+        )}
 
         {/* Input de monto */}
         <AmountInput
@@ -248,31 +195,29 @@ export default function TransferScreen() {
           />
         </View>
 
-{/* Botones de acción */}
-<View style={styles.actionRow}>
-  <Pressable
-    style={[styles.cancelButton]}
-    onPress={handleCloseSuccess} // o la función que quieras para cancelar
-  >
-    <Text style={styles.cancelButtonText}>Cancelar</Text>
-  </Pressable>
+        {/* Botones de acción */}
+        <View style={styles.actionRow}>
+          <Pressable
+            style={[styles.cancelButton]}
+            onPress={handleCloseSuccess} // o la función que quieras para cancelar
+          >
+            <Text style={styles.cancelButtonText}>Cancelar</Text>
+          </Pressable>
 
-  <Pressable
-    style={[styles.continueButton]} // siempre rojo
-    onPress={handleContinue}
-  >
-    <Text style={styles.continueButtonText}>
-      {method === 'qr' ? 'Generar QR' : 'Enviar cobro'}
-    </Text>
-    <Icon
-      name={method === 'qr' ? 'qr-code-2' : 'arrow-forward'}
-      size={20}
-      color={Colors.complementary.white}
-    />
-  </Pressable>
-</View>
-
-
+          <Pressable
+            style={[styles.continueButton]} // siempre rojo
+            onPress={handleContinue}
+          >
+            <Text style={styles.continueButtonText}>
+              {method === "qr" ? "Generar QR" : "Enviar cobro"}
+            </Text>
+            <Icon
+              name={method === "qr" ? "qr-code-2" : "arrow-forward"}
+              size={20}
+              color={Colors.complementary.white}
+            />
+          </Pressable>
+        </View>
 
         {/* Info de seguridad */}
         <View style={styles.securityInfo}>
@@ -386,69 +331,38 @@ const styles = StyleSheet.create({
     fontSize: Typography.sizes.xs,
     color: Colors.text.secondary,
   },
-  methodContainer: {
+  actionRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: Spacing.lg,
+    marginBottom: Spacing.md,
+    gap: Spacing.sm,
   },
-  methodButton: {
+  cancelButton: {
     flex: 1,
-    flexDirection: "row",
+    backgroundColor: Colors.text.light, // gris claro
+    borderRadius: BorderRadius.md,
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 2,
-    borderColor: Colors.ui.border,
-    borderRadius: BorderRadius.md,
     paddingVertical: Spacing.md,
-    marginHorizontal: Spacing.xs,
-    backgroundColor: Colors.background.primary,
-    gap: Spacing.xs,
   },
-  methodActive: {
-    backgroundColor: Colors.primary.red,
-    borderColor: Colors.primary.red,
+  cancelButtonText: {
+    fontSize: Typography.sizes.lg,
+    fontWeight: Typography.weights.bold,
+    color: Colors.text.primary, // texto gris oscuro o negro
   },
-  methodText: {
-    fontSize: Typography.sizes.base,
-    color: Colors.text.primary,
-    fontWeight: Typography.weights.semibold,
+  continueButton: {
+    flex: 1,
+    flexDirection: "row",
+    backgroundColor: Colors.primary.red, // siempre rojo
+    paddingVertical: Spacing.md,
+    borderRadius: BorderRadius.md,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: Spacing.sm,
+    shadowColor: Colors.primary.red,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
   },
-  methodTextActive: {
-    color: Colors.complementary.white,
-  },
-  actionRow: {
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  marginBottom: Spacing.md,
-  gap: Spacing.sm,
-},
-cancelButton: {
-  flex: 1,
-  backgroundColor: Colors.text.light, // gris claro
-  borderRadius: BorderRadius.md,
-  alignItems: 'center',
-  justifyContent: 'center',
-  paddingVertical: Spacing.md,
-},
-cancelButtonText: {
-  fontSize: Typography.sizes.lg,
-  fontWeight: Typography.weights.bold,
-  color: Colors.text.primary, // texto gris oscuro o negro
-},
-continueButton: {
-  flex: 1,
-  flexDirection: 'row',
-  backgroundColor: Colors.primary.red, // siempre rojo
-  paddingVertical: Spacing.md,
-  borderRadius: BorderRadius.md,
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: Spacing.sm,
-  shadowColor: Colors.primary.red,
-  shadowOffset: { width: 0, height: 4 },
-  shadowOpacity: 0.3,
-  shadowRadius: 8,
-  elevation: 6,
-},
-
 });
