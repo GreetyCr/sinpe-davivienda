@@ -191,7 +191,7 @@ export const ContactSelector: React.FC<ContactSelectorProps> = ({
             <View style={styles.selectIconCircle}>
               <Icon 
                 name={isLoadingNative ? "hourglass-empty" : "person-search"} 
-                size={20} 
+                size={18} 
                 color={Colors.complementary.white} 
               />
             </View>
@@ -306,7 +306,7 @@ export const ContactSelector: React.FC<ContactSelectorProps> = ({
                 onPress={onAddFavorite}
               >
                 <View style={styles.addIconCircle}>
-                  <Icon name="person-add" size={28} color={Colors.complementary.white} />
+                  <Icon name="person-add" size={22} color={Colors.complementary.white} />
                 </View>
                 <Text style={styles.addFavoriteText} numberOfLines={2}>
                   Agregar{'\n'}favorito
@@ -334,11 +334,11 @@ const styles = StyleSheet.create({
   },
   columnsWrapper: {
     flexDirection: 'row',
-    gap: Spacing.md,
+    gap: Spacing.sm,
     alignItems: 'flex-start',
   },
   leftColumn: {
-    width: 100,
+    width: 90,
   },
   rightColumn: {
     flex: 1,
@@ -385,26 +385,26 @@ const styles = StyleSheet.create({
     color: Colors.complementary.white,
   },
   scrollContent: {
-    gap: Spacing.md,
+    gap: Spacing.sm,
     paddingVertical: Spacing.xs,
   },
   // Card de seleccionar contacto
   selectContactCard: {
-    width: 100,
+    width: 90,
     backgroundColor: 'rgba(255, 255, 255, 0.25)',
-    borderRadius: BorderRadius.lg,
-    padding: Spacing.md,
+    borderRadius: BorderRadius.md,
+    padding: Spacing.sm,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 2,
     borderColor: Colors.complementary.white,
-    height: 132,
-    gap: Spacing.sm,
+    height: 110,
+    gap: Spacing.xs,
   },
   selectIconCircle: {
-    width: 40,
-    height: 40,
-    borderRadius: BorderRadius.md,
+    width: 36,
+    height: 36,
+    borderRadius: BorderRadius.sm,
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
     alignItems: 'center',
     justifyContent: 'center',
@@ -414,14 +414,14 @@ const styles = StyleSheet.create({
     fontWeight: Typography.weights.semibold,
     color: Colors.complementary.white,
     textAlign: 'center',
-    lineHeight: 14,
+    lineHeight: 13,
   },
   // Cards de contactos
   contactCard: {
-    width: 100,
+    width: 90,
     backgroundColor: Colors.complementary.white,
-    borderRadius: BorderRadius.lg,
-    padding: Spacing.md,
+    borderRadius: BorderRadius.md,
+    padding: Spacing.sm,
     alignItems: 'center',
     borderWidth: 2,
     borderColor: 'transparent',
@@ -458,26 +458,26 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   avatar: {
-    width: 48,
-    height: 48,
-    borderRadius: BorderRadius.lg,
+    width: 42,
+    height: 42,
+    borderRadius: BorderRadius.md,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: Spacing.sm,
+    marginBottom: Spacing.xs,
   },
   initials: {
-    fontSize: Typography.sizes.lg,
+    fontSize: Typography.sizes.base,
     fontWeight: Typography.weights.bold,
   },
   contactName: {
-    fontSize: Typography.sizes.sm,
+    fontSize: Typography.sizes.xs,
     fontWeight: Typography.weights.semibold,
     color: Colors.text.primary,
     textAlign: 'center',
     marginBottom: 2,
   },
   contactPhone: {
-    fontSize: Typography.sizes.xs,
+    fontSize: 10,
     color: Colors.text.secondary,
     textAlign: 'center',
   },
@@ -488,30 +488,30 @@ const styles = StyleSheet.create({
   },
   // Card de agregar favorito
   addFavoriteCard: {
-    width: 100,
+    width: 90,
     backgroundColor: 'rgba(255, 255, 255, 0.25)',
-    borderRadius: BorderRadius.lg,
-    padding: Spacing.md,
+    borderRadius: BorderRadius.md,
+    padding: Spacing.sm,
     alignItems: 'center',
     borderWidth: 2,
     borderColor: Colors.complementary.white,
     borderStyle: 'dashed',
   },
   addIconCircle: {
-    width: 48,
-    height: 48,
-    borderRadius: BorderRadius.lg,
+    width: 42,
+    height: 42,
+    borderRadius: BorderRadius.md,
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: Spacing.sm,
+    marginBottom: Spacing.xs,
   },
   addFavoriteText: {
-    fontSize: Typography.sizes.sm,
+    fontSize: Typography.sizes.xs,
     fontWeight: Typography.weights.bold,
     color: Colors.complementary.white,
     textAlign: 'center',
-    lineHeight: 16,
+    lineHeight: 14,
   },
 });
 
