@@ -175,7 +175,9 @@ export const ContactSelector: React.FC<ContactSelectorProps> = ({
       <View style={styles.columnsWrapper}>
         {/* Columna izquierda: Contactos */}
         <View style={styles.leftColumn}>
-          <Text style={styles.columnTitle}>Contactos</Text>
+          <View style={styles.leftHeader}>
+            <Text style={styles.columnTitle}>Contactos</Text>
+          </View>
           
           <Pressable
             style={({ pressed }) => [
@@ -333,14 +335,13 @@ const styles = StyleSheet.create({
   columnsWrapper: {
     flexDirection: 'row',
     gap: Spacing.md,
+    alignItems: 'flex-start',
   },
   leftColumn: {
-    flex: 0.22,
-    gap: Spacing.xs,
+    width: 100,
   },
   rightColumn: {
-    flex: 0.78,
-    gap: Spacing.sm,
+    flex: 1,
   },
   divider: {
     width: 2,
@@ -351,15 +352,21 @@ const styles = StyleSheet.create({
     marginHorizontal: Spacing.xs,
   },
   columnTitle: {
-    fontSize: Typography.sizes.sm,
+    fontSize: Typography.sizes.base,
     fontWeight: Typography.weights.bold,
     color: Colors.complementary.white,
-    marginBottom: 2,
+  },
+  leftHeader: {
+    height: 32,
+    justifyContent: 'center',
+    marginBottom: Spacing.sm,
   },
   favoritesHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    height: 32,
+    marginBottom: Spacing.sm,
   },
   editButton: {
     paddingVertical: Spacing.xs,
@@ -383,16 +390,16 @@ const styles = StyleSheet.create({
   },
   // Card de seleccionar contacto
   selectContactCard: {
-    flex: 1,
+    width: 100,
     backgroundColor: 'rgba(255, 255, 255, 0.25)',
-    borderRadius: BorderRadius.md,
-    padding: Spacing.sm,
+    borderRadius: BorderRadius.lg,
+    padding: Spacing.md,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 1.5,
+    borderWidth: 2,
     borderColor: Colors.complementary.white,
-    minHeight: 90,
-    gap: Spacing.xs,
+    height: 132,
+    gap: Spacing.sm,
   },
   selectIconCircle: {
     width: 40,
