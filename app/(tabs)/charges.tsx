@@ -23,6 +23,7 @@ import { Colors } from "@/constants/Colors";
 import { Spacing, BorderRadius } from "@/constants/Spacing";
 import { Typography } from "@/constants/Typography";
 import { Contact } from "@/types";
+import { ChargesHeader } from "@/components/charges/ChargesHeader";
 
 export default function TransferScreen() {
   const router = useRouter();
@@ -146,20 +147,7 @@ export default function TransferScreen() {
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
       >
-        {/* Saludo y saldo disponible */}
-        <View style={styles.header}>
-          <Text style={styles.greeting}>Enviar dinero</Text>
-          <View style={styles.balanceChip}>
-            <Icon
-              name="account-balance-wallet"
-              size={16}
-              color={Colors.status.info}
-            />
-            <Text style={styles.balanceText}>
-              Disponible: ₡{mockUser.balance.toLocaleString()}
-            </Text>
-          </View>
-        </View>
+        <ChargesHeader user={mockUser} />
         <View style={styles.methodContainer}>
           <Pressable
             style={[
