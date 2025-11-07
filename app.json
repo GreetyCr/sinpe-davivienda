@@ -33,6 +33,12 @@
         {
           "faceIDPermission": "Permitir que SINPE Davivienda use Face ID para autenticación segura."
         }
+      ],
+      [
+        "expo-contacts",
+        {
+          "contactsPermission": "Permitir que SINPE Davivienda acceda a tus contactos para seleccionar destinatarios de transferencias."
+        }
       ]
     ],
     "scheme": "davivienda"
