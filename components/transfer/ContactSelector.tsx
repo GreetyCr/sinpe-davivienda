@@ -189,7 +189,7 @@ export const ContactSelector: React.FC<ContactSelectorProps> = ({
             <View style={styles.selectIconCircle}>
               <Icon 
                 name={isLoadingNative ? "hourglass-empty" : "person-search"} 
-                size={32} 
+                size={24} 
                 color={Colors.complementary.white} 
               />
             </View>
@@ -322,7 +322,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.primary.red,
     borderRadius: BorderRadius.lg,
-    padding: Spacing.lg,
+    padding: Spacing.md,
     marginBottom: Spacing.lg,
     shadowColor: Colors.ui.shadow,
     shadowOffset: { width: 0, height: 4 },
@@ -332,15 +332,15 @@ const styles = StyleSheet.create({
   },
   columnsWrapper: {
     flexDirection: 'row',
-    gap: Spacing.lg,
+    gap: Spacing.md,
   },
   leftColumn: {
-    flex: 0.35,
-    gap: Spacing.md,
+    flex: 0.28,
+    gap: Spacing.sm,
   },
   rightColumn: {
-    flex: 0.65,
-    gap: Spacing.md,
+    flex: 0.72,
+    gap: Spacing.sm,
   },
   divider: {
     width: 2,
@@ -351,7 +351,7 @@ const styles = StyleSheet.create({
     marginHorizontal: Spacing.xs,
   },
   columnTitle: {
-    fontSize: Typography.sizes.lg,
+    fontSize: Typography.sizes.base,
     fontWeight: Typography.weights.bold,
     color: Colors.complementary.white,
     marginBottom: Spacing.xs,
@@ -385,28 +385,28 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'rgba(255, 255, 255, 0.25)',
     borderRadius: BorderRadius.lg,
-    padding: Spacing.xl,
+    padding: Spacing.md,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 2,
     borderColor: Colors.complementary.white,
-    minHeight: 160,
-    gap: Spacing.md,
+    minHeight: 120,
+    gap: Spacing.sm,
   },
   selectIconCircle: {
-    width: 60,
-    height: 60,
-    borderRadius: BorderRadius.xl,
+    width: 48,
+    height: 48,
+    borderRadius: BorderRadius.lg,
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   selectContactText: {
-    fontSize: Typography.sizes.base,
+    fontSize: Typography.sizes.sm,
     fontWeight: Typography.weights.bold,
     color: Colors.complementary.white,
     textAlign: 'center',
-    lineHeight: 20,
+    lineHeight: 18,
   },
   // Cards de contactos
   contactCard: {
