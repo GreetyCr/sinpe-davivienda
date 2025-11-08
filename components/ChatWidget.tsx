@@ -261,6 +261,7 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingHorizontal: Spacing.md,
     paddingBottom: Spacing.sm,
+    marginBottom: Spacing.md,
     maxHeight: "92%",
     minHeight: "66%",
   },
