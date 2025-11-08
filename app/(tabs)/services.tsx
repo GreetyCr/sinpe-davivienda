@@ -1,76 +1,146 @@
-import { View, StyleSheet, ScrollView } from 'react-native';
-import { Text } from 'react-native-paper';
-import { Colors } from '../../constants/Colors';
-import { Spacing } from '../../constants/Spacing';
+import React, { useState } from "react";
+import { StyleSheet, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
+import { mockUser, mockContacts } from "@/utils/mockData";
+import { AmountInput } from "@/components/transfer";
+import { Colors } from "@/constants/Colors";
+import { Spacing } from "@/constants/Spacing";
+import { Contact } from "@/types";
 
-export default function ServicesScreen() {
+import { ProviderSelector, type ChargeProvider } from "@/components/services/ProviderSelector";
+import { ContactSection } from "@/components/services/ContactSection";
+import { ActionButtons } from "@/components/charges/ActionButtons";
+
+export default function TransferScreen() {
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [amount, setAmount] = useState("");
+  const [isPhoneValid, setIsPhoneValid] = useState(false);
+  const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
+  const [method, setMethod] = useState<ChargeProvider>("movistar");
+
+  // Filtrar contactos favoritos para mostrar primero
+  const favoriteContacts = mockContacts
+    .filter((c) => c.isFavorite)
+    .sort((a, b) => {
+      if (!a.lastTransaction && !b.lastTransaction) return 0;
+      if (!a.lastTransaction) return 1;
+      if (!b.lastTransaction) return -1;
+      return b.lastTransaction.getTime() - a.lastTransaction.getTime();
+    });
+
+  const handleSelectContact = (contact: Contact) => {
+    setSelectedContact(contact);
+    setPhoneNumber(contact.phoneNumber);
+    setIsPhoneValid(true);
+  };
+
+  const handleSelectFromNativeContacts = (
+    phoneNumber: string,
+    name?: string
+  ) => {
+    setPhoneNumber(phoneNumber);
+    setIsPhoneValid(true);
+    // Crear contacto temporal si viene nombre
+    if (name) {
+      setSelectedContact({
+        id: "temp-" + Date.now(),
+        name: name,
+        phoneNumber: phoneNumber,
+        isFavorite: false,
+      });
+    } else {
+      setSelectedContact(null);
+    }
+  };
+
+  const handlePhoneChange = (text: string) => {
+    setPhoneNumber(text);
+    if (selectedContact && text !== selectedContact.phoneNumber) {
+      setSelectedContact(null);
+    }
+  };
+
+  const resetForm = () => {
+    setPhoneNumber("");
+    setAmount("");
+    setSelectedContact(null);
+    setIsPhoneValid(false);
+  };
+
+  const handleRemoveFavorite = (contactId: string) => {
+    // Aquí se implementaría la lógica real de eliminar del backend
+    // Por ahora solo mostramos un mensaje
+    console.log("Eliminar favorito:", contactId);
+    // TODO: Implementar lógica de eliminación cuando haya backend
+  };
+
+  const handleAddFavorite = () => {
+    // Aquí se abriría un modal o pantalla para agregar un nuevo favorito
+    console.log("Agregar nuevo favorito");
+    // TODO: Implementar modal de agregar favorito
+  };
+
+  const numericAmount = parseInt(amount) || 0;
+  const canContinue =
+    isPhoneValid && numericAmount > 0 && numericAmount <= mockUser.balance;
+  const handleContinue = () => {
+    if (!canContinue) return;
+    console.log(`Procesar recarga ${method} por ₡${numericAmount}`);
+  };
+
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.content}>
-        <Text variant="headlineLarge" style={styles.title}>
-          🔧 Servicios
-        </Text>
-        <Text variant="bodyLarge" style={styles.subtitle}>
-          Recargas telefónicas y más
-        </Text>
-        
-        <View style={styles.infoBox}>
-          <Text variant="titleMedium" style={styles.infoTitle}>
-            Esta pantalla mostrará:
-          </Text>
-          <Text variant="bodyMedium" style={styles.infoText}>
-            • Selector de operadora (Kolbi, Claro, Movistar)
-          </Text>
-          <Text variant="bodyMedium" style={styles.infoText}>
-            • Input de número de teléfono
-          </Text>
-          <Text variant="bodyMedium" style={styles.infoText}>
-            • Selector de monto (₡5,000, ₡10,000, ₡15,000)
-          </Text>
-          <Text variant="bodyMedium" style={styles.infoText}>
-            • Confirmación antes de recargar
-          </Text>
-          <Text variant="bodyMedium" style={styles.infoText}>
-            • Historial de recargas realizadas
-          </Text>
-        </View>
-      </View>
-    </ScrollView>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      keyboardVerticalOffset={100}
+    >
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.content}
+        keyboardShouldPersistTaps="handled"
+      >
+        <ProviderSelector method={method} onChange={setMethod} />
+
+        <ContactSection
+          contacts={favoriteContacts}
+          selectedContact={selectedContact}
+          phoneNumber={phoneNumber}
+          onSelectContact={handleSelectContact}
+          onSelectFromNative={handleSelectFromNativeContacts}
+          onRemoveFavorite={handleRemoveFavorite}
+          onAddFavorite={handleAddFavorite}
+          onPhoneChange={handlePhoneChange}
+          onValidation={setIsPhoneValid}
+        />
+
+        {/* Input de monto */}
+        <AmountInput
+          value={amount}
+          onChangeText={setAmount}
+          maxAmount={mockUser.balance}
+        />
+
+
+        <ActionButtons
+          primaryLabel={`Realizar Recarga`}
+          onCancel={resetForm}
+          onContinue={handleContinue}
+        />
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background.primary,
+    backgroundColor: Colors.background.secondary,
+  },
+  scrollView: {
+    flex: 1,
   },
   content: {
+    flexGrow: 1,
     padding: Spacing.lg,
-  },
-  title: {
-    color: Colors.primary.red,
-    fontWeight: 'bold',
-    marginBottom: Spacing.sm,
-  },
-  subtitle: {
-    color: Colors.text.secondary,
-    marginBottom: Spacing.xl,
-  },
-  infoBox: {
-    backgroundColor: Colors.background.secondary,
-    padding: Spacing.md,
-    borderRadius: 12,
-    borderLeftWidth: 4,
-    borderLeftColor: Colors.complementary.teal,
-  },
-  infoTitle: {
-    color: Colors.text.primary,
-    fontWeight: 'bold',
-    marginBottom: Spacing.md,
-  },
-  infoText: {
-    color: Colors.text.secondary,
-    marginBottom: Spacing.xs,
+    paddingBottom: Spacing["2xl"],
   },
 });
-
