@@ -7,26 +7,26 @@ import { Spacing, BorderRadius } from "@/constants/Spacing";
 import { Typography } from "@/constants/Typography";
 
 type Props = {
-  method: "qr" | "sms";
+  primaryLabel: string;
   onCancel: () => void;
   onContinue: () => void;
+  primaryIcon?: string;
 };
 
-export const ActionButtons = ({ method, onCancel, onContinue }: Props) => (
+export const ActionButtons = ({
+  primaryLabel,
+  primaryIcon = "arrow-forward",
+  onCancel,
+  onContinue,
+}: Props) => (
   <View style={styles.row}>
     <Pressable style={styles.cancel} onPress={onCancel}>
       <Text style={styles.cancelText}>Cancelar</Text>
     </Pressable>
 
     <Pressable style={styles.continue} onPress={onContinue}>
-      <Text style={styles.continueText}>
-        {method === "qr" ? "Generar QR" : "Enviar cobro"}
-      </Text>
-      <Icon
-        name={method === "qr" ? "qr-code-2" : "arrow-forward"}
-        size={20}
-        color={Colors.complementary.white}
-      />
+      <Text style={styles.continueText}>{primaryLabel}</Text>
+      <Icon name={primaryIcon} size={20} color={Colors.complementary.white} />
     </Pressable>
   </View>
 );
