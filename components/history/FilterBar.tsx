@@ -28,6 +28,11 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   onShowDatePicker,
   onClearFilters,
 }) => {
+  const hasActiveFilters = Boolean(filterType || filterDate);
+  const dateLabel = filterDate
+    ? filterDate.toLocaleDateString('es-CR', { day: '2-digit', month: 'short' })
+    : 'Fecha';
+
   const handleDateChange = (event: any, selectedDate?: Date) => {
     onShowDatePicker(false);
     if (selectedDate) {
@@ -37,6 +42,14 @@ export const FilterBar: React.FC<FilterBarProps> = ({
 
   const toggleFilterType = (type: FilterType) => {
     onFilterTypeChange(filterType === type ? null : type);
+  };
+
+  const handleDatePress = () => {
+    onShowDatePicker(true);
+  };
+
+  const handleRemoveDate = () => {
+    onFilterDateChange(null);
   };
 
   return (
@@ -50,107 +63,149 @@ export const FilterBar: React.FC<FilterBarProps> = ({
         />
       )}
 
-      <View style={styles.filterButtons}>
+      <View style={styles.headerRow}>
+        <View>
+          <Text style={styles.title}>Filtrar movimientos</Text>
+          <Text style={styles.subtitle}>Selecciona tipo o fecha</Text>
+        </View>
+        {hasActiveFilters && (
+          <Pressable style={styles.clearChip} onPress={onClearFilters}>
+            <Icon name="refresh" size={16} color={Colors.primary.red} />
+            <Text style={styles.clearText}>Limpiar</Text>
+          </Pressable>
+        )}
+      </View>
+
+      <View style={styles.chipsRow}>
         <Pressable
-          style={[styles.typeButton, filterType === 'credit' && styles.activeButton]}
+          style={[styles.chip, styles.typeChip, filterType === 'credit' && styles.activeChip]}
           onPress={() => toggleFilterType('credit')}
         >
-          <Icon
-            name="arrow-downward"
-            size={16}
-            color={filterType === 'credit' ? Colors.complementary.white : Colors.primary.red}
-          />
-          <Text style={[styles.typeText, filterType === 'credit' && styles.activeText]}>
+          <Text style={[styles.chipText, filterType === 'credit' && styles.activeChipText]}>
             Créditos
           </Text>
         </Pressable>
 
         <Pressable
-          style={[styles.typeButton, filterType === 'debit' && styles.activeButton]}
+          style={[styles.chip, styles.typeChip, filterType === 'debit' && styles.activeChip]}
           onPress={() => toggleFilterType('debit')}
         >
-          <Icon
-            name="arrow-upward"
-            size={16}
-            color={filterType === 'debit' ? Colors.complementary.white : Colors.primary.red}
-          />
-          <Text style={[styles.typeText, filterType === 'debit' && styles.activeText]}>
+          <Text style={[styles.chipText, filterType === 'debit' && styles.activeChipText]}>
             Débitos
+          </Text>
+        </Pressable>
+
+        <Pressable
+          style={[styles.chip, filterDate && styles.activeChip]}
+          onPress={handleDatePress}
+        >
+          <Icon
+            name="calendar-today"
+            size={16}
+            color={filterDate ? Colors.primary.red : Colors.complementary.white}
+          />
+          <Text style={[styles.chipText, filterDate && styles.activeChipText, styles.dateChipText]}>
+            {dateLabel}
           </Text>
         </Pressable>
       </View>
 
-      <Pressable
-        style={[styles.dateButton, { flex: 1, marginHorizontal: Spacing.xs }]}
-        onPress={() => onShowDatePicker(true)}
-      >
-        <Icon name="calendar-today" size={18} color={Colors.primary.red} />
-        <Text style={styles.dateText}>
-          {filterDate ? filterDate.toLocaleDateString('es-CR') : 'Fecha'}
-        </Text>
-      </Pressable>
-
-      <Pressable style={styles.clearButton} onPress={onClearFilters}>
-        <Icon name="close" size={18} color={Colors.complementary.white} />
-      </Pressable>
+      {filterDate && (
+        <Pressable style={styles.dateReset} onPress={handleRemoveDate}>
+          <Icon name="event-busy" size={16} color={Colors.primary.red} />
+          <Text style={styles.dateResetText}>Quitar filtro de fecha</Text>
+        </Pressable>
+      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: Colors.complementary.white,
+    borderRadius: BorderRadius.lg,
+    padding: Spacing.md,
+    shadowColor: Colors.ui.shadow,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
+    elevation: 2,
+  },
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: Typography.sizes.base,
+    fontWeight: Typography.weights.bold,
+    color: Colors.text.primary,
+  },
+  subtitle: {
+    marginTop: 2,
+    fontSize: Typography.sizes.sm,
+    color: Colors.text.secondary,
+  },
+  clearChip: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: Spacing.sm,
-    paddingVertical: Spacing.sm,
-    backgroundColor: Colors.complementary.white,
-    borderBottomWidth: 1,
-    borderColor: Colors.ui.divider,
-  },
-  filterButtons: {
-    flexDirection: 'row',
+    borderRadius: BorderRadius.full,
+    backgroundColor: Colors.background.secondary,
+    paddingHorizontal: Spacing.md,
+    paddingVertical: Spacing.xs,
     gap: Spacing.xs,
   },
-  typeButton: {
+  clearText: {
+    fontSize: Typography.sizes.xs,
+    fontWeight: Typography.weights.semibold,
+    color: Colors.primary.red,
+    textTransform: 'uppercase',
+  },
+  chipsRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginTop: Spacing.md,
+  },
+  chip: {
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
     borderColor: Colors.primary.red,
-    borderRadius: BorderRadius.sm,
-    paddingVertical: Spacing.xs,
-    paddingHorizontal: Spacing.sm,
-  },
-  typeText: {
-    marginLeft: 4,
-    color: Colors.primary.red,
-    fontSize: Typography.sizes.sm,
-    fontWeight: Typography.weights.semibold,
-  },
-  activeButton: {
+    borderRadius: BorderRadius.md,
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.lg,
+    marginRight: Spacing.sm,
+    marginBottom: Spacing.sm,
+    minHeight: 44,
     backgroundColor: Colors.primary.red,
   },
-  activeText: {
-    color: Colors.complementary.white,
+  typeChip: {
+    paddingHorizontal: Spacing.md,
   },
-  dateButton: {
+  chipText: {
+    color: Colors.complementary.white,
+    fontSize: Typography.sizes.base,
+    fontWeight: Typography.weights.bold,
+  },
+  dateChipText: {
+    marginLeft: Spacing.xs,
+  },
+  activeChip: {
+    backgroundColor: Colors.complementary.white,
+  },
+  activeChipText: {
+    color: Colors.primary.red,
+  },
+  dateReset: {
+    marginTop: Spacing.xs,
     flexDirection: 'row',
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: Colors.ui.border,
-    borderRadius: BorderRadius.sm,
-    paddingVertical: Spacing.xs,
-    paddingHorizontal: Spacing.sm,
+    gap: Spacing.xs,
   },
-  dateText: {
-    marginLeft: 4,
-    fontSize: Typography.sizes.sm,
-    color: Colors.text.primary,
+  dateResetText: {
+    fontSize: Typography.sizes.xs,
+    color: Colors.primary.red,
     fontWeight: Typography.weights.medium,
-  },
-  clearButton: {
-    backgroundColor: Colors.text.secondary,
-    padding: Spacing.xs,
-    borderRadius: BorderRadius.sm,
   },
 });
 
