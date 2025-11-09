@@ -1,14 +1,17 @@
 import React from "react";
-import { View, Pressable, StyleSheet } from "react-native";
+import { View, Pressable, StyleSheet, Image } from "react-native";
 import { Text } from "react-native-paper";
 import { Colors } from "@/constants/Colors";
 import { Spacing, BorderRadius } from "@/constants/Spacing";
 import { Typography } from "@/constants/Typography";
+import ClaroLogo from "@/assets/claro_logo.png";
+import KolbiLogo from "@/assets/kolbi_logo.png";
+import LibertyLogo from "@/assets/liberty_logo.png";
 
-const PROVIDERS = [
-  { id: "movistar", label: "Movistar" },
-  { id: "kolbi", label: "Kolbi" },
-  { id: "claro", label: "Claro" },
+export const PROVIDERS = [
+  { id: "liberty", label: "Liberty", logo: LibertyLogo },
+  { id: "kolbi", label: "Kolbi", logo: KolbiLogo, logoSize: 68 },
+  { id: "claro", label: "Claro", logo: ClaroLogo },
 ] as const;
 
 export type ChargeProvider = (typeof PROVIDERS)[number]["id"];
@@ -20,7 +23,7 @@ type Props = {
 
 export const ProviderSelector = ({ method, onChange }: Props) => (
   <View style={styles.container}>
-    {PROVIDERS.map(({ id, label }) => (
+    {PROVIDERS.map(({ id, label, logo, logoSize }) => (
       <Pressable
         key={id}
         style={[styles.button, method === id && styles.active]}
@@ -28,14 +31,11 @@ export const ProviderSelector = ({ method, onChange }: Props) => (
       >
         <View style={styles.logoWrapper}>
           <View style={[styles.logoPlaceholder, method === id && styles.logoActive]}>
-            <Text
-              style={[
-                styles.logoText,
-                method === id && styles.logoTextActive,
-              ]}
-            >
-              {label[0]}
-            </Text>
+            <Image
+              source={logo}
+              style={[styles.logo, logoSize && { width: logoSize, height: logoSize }]}
+              resizeMode="contain"
+            />
           </View>
           <Text
             style={[
@@ -78,8 +78,8 @@ const styles = StyleSheet.create({
     gap: Spacing.xs,
   },
   logoPlaceholder: {
-    width: 36,
-    height: 36,
+    width: 68,
+    height: 68,
     borderRadius: BorderRadius.full,
     borderWidth: 1,
     borderColor: Colors.ui.border,
@@ -89,15 +89,11 @@ const styles = StyleSheet.create({
   },
   logoActive: {
     borderColor: Colors.complementary.white,
-    backgroundColor: `${Colors.complementary.white}20`,
+    backgroundColor: Colors.complementary.white,
   },
-  logoText: {
-    fontSize: Typography.sizes.md,
-    fontWeight: Typography.weights.bold,
-    color: Colors.text.primary,
-  },
-  logoTextActive: {
-    color: Colors.complementary.white,
+  logo: {
+    width: 52,
+    height: 52,
   },
   text: {
     fontSize: Typography.sizes.base,
