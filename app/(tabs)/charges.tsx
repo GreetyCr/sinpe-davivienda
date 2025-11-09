@@ -47,7 +47,7 @@ export default function TransferScreen() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [method, setMethod] = useState<"qr" | "sms">("qr");
   const [showQrModal, setShowQrModal] = useState(false);
-  const [chargeReference, setChargeReference] = useState(generateChargeReference);
+  const [chargeReference, setChargeReference] = useState(() => generateChargeReference());
 
   // Filtrar contactos favoritos para mostrar primero
   const favoriteContacts = mockContacts
