@@ -23,6 +23,7 @@ export const TransactionCard: React.FC<TransactionCardProps> = ({
 }) => {
   const isCredit = transaction.type === 'receive';
   const phoneNumber = transaction.recipient?.phoneNumber ?? transaction.sender?.phoneNumber;
+  const displayAmount = `${isCredit ? '' : '-'}${formatCurrency(transaction.amount)}`;
 
   return (
     <View style={[styles.cardContainer, isExpanded && styles.cardContainerExpanded]}>
@@ -31,7 +32,7 @@ export const TransactionCard: React.FC<TransactionCardProps> = ({
         style={[styles.topCard, isExpanded && styles.topCardExpanded]}
       >
         <View style={styles.leftSide}>
-          <Text style={styles.amount}>{formatCurrency(transaction.amount)}</Text>
+          <Text style={styles.amount}>{displayAmount}</Text>
           {phoneNumber && (
             <Text style={styles.label}>
               Teléfono: <Text style={styles.value}>{phoneNumber}</Text>
@@ -46,7 +47,7 @@ export const TransactionCard: React.FC<TransactionCardProps> = ({
           <View style={[styles.typeBadge, isCredit && styles.creditBadge]}>
             <Icon
               name={isCredit ? 'arrow-downward' : 'arrow-upward'}
-              size={14}
+              size={22}
               color={Colors.complementary.white}
             />
             <Text style={styles.typeText}>
@@ -57,6 +58,7 @@ export const TransactionCard: React.FC<TransactionCardProps> = ({
             name={isExpanded ? 'keyboard-arrow-up' : 'keyboard-arrow-down'}
             size={26}
             color={Colors.text.primary}
+            style={styles.chevronIcon}
           />
         </View>
       </Pressable>
@@ -145,17 +147,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: Colors.status.error,
     paddingHorizontal: Spacing.sm,
-    paddingVertical: Spacing.xs,
+    paddingVertical: Spacing.sm,
     borderRadius: BorderRadius.sm,
     gap: 4,
+    minWidth: 100,
+    justifyContent: 'center',
   },
   creditBadge: {
-    backgroundColor: Colors.status.success,
+    backgroundColor: Colors.status.error,
   },
   typeText: {
     color: Colors.complementary.white,
-    fontSize: Typography.sizes.xs,
-    fontWeight: Typography.weights.semibold,
+    fontSize: Typography.sizes.base,
+    fontWeight: Typography.weights.bold,
   },
   amount: {
     fontSize: Typography.sizes.lg,
@@ -211,6 +215,9 @@ const styles = StyleSheet.create({
     fontSize: Typography.sizes.xs,
     fontWeight: Typography.weights.semibold,
     marginTop: 2,
+  },
+  chevronIcon: {
+    marginTop: Spacing.sm,
   },
 });
 
