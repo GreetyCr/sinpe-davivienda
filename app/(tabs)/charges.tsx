@@ -143,7 +143,10 @@ export default function TransferScreen() {
     minimumFractionDigits: 0,
   }).format(numericAmount);
 
-  const handleCloseQrModal = () => setShowQrModal(false);
+  const handleCloseQrModal = () => {
+    handleCloseSuccess();
+    setShowQrModal(false);
+  };
 
   const handleShareQr = async () => {
     const shareMessage = [
