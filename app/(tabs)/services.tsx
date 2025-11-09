@@ -6,16 +6,39 @@ import { Colors } from "@/constants/Colors";
 import { Spacing } from "@/constants/Spacing";
 import { Contact } from "@/types";
 
-import { ProviderSelector, type ChargeProvider } from "@/components/services/ProviderSelector";
+import {
+  ProviderSelector,
+  type ChargeProvider,
+  PROVIDERS,
+} from "@/components/services/ProviderSelector";
 import { ContactSection } from "@/components/services/ContactSection";
 import { ActionButtons } from "@/components/charges/ActionButtons";
+import { RechargeConfirmModal } from "@/components/services/RechargeConfirmModal";
+import { RechargeSuccessModal } from "@/components/services/RechargeSuccessModal";
+
+const PROVIDER_LABEL_MAP: Record<ChargeProvider, string> = PROVIDERS.reduce(
+  (acc, provider) => {
+    acc[provider.id] = provider.label;
+    return acc;
+  },
+  {} as Record<ChargeProvider, string>
+);
 
 export default function TransferScreen() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [amount, setAmount] = useState("");
   const [isPhoneValid, setIsPhoneValid] = useState(false);
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
-  const [method, setMethod] = useState<ChargeProvider>("movistar");
+  const [method, setMethod] = useState<ChargeProvider>("liberty");
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [reference, setReference] = useState("");
+  const [lastRecharge, setLastRecharge] = useState<{
+    phoneNumber: string;
+    amount: number;
+    provider: ChargeProvider;
+  } | null>(null);
 
   // Filtrar contactos favoritos para mostrar primero
   const favoriteContacts = mockContacts
@@ -66,6 +89,44 @@ export default function TransferScreen() {
     setIsPhoneValid(false);
   };
 
+  const generateReference = () => {
+    const now = new Date();
+    return `REC-${now.getFullYear()}${(now.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}${now.getDate().toString().padStart(2, "0")}-${Math.floor(
+      Math.random() * 1000
+    )
+      .toString()
+      .padStart(3, "0")}`;
+  };
+
+  const handleConfirmRecharge = () => {
+    const currentAmount = parseInt(amount) || 0;
+    const currentPhone = phoneNumber;
+    const currentProvider = method;
+
+    setIsProcessing(true);
+
+    setTimeout(() => {
+      const newReference = generateReference();
+      setIsProcessing(false);
+      setShowConfirm(false);
+      setReference(newReference);
+      setLastRecharge({
+        phoneNumber: currentPhone,
+        amount: currentAmount,
+        provider: currentProvider,
+      });
+      setShowSuccess(true);
+      resetForm();
+    }, 1200);
+  };
+
+  const handleCloseSuccess = () => {
+    setShowSuccess(false);
+    setLastRecharge(null);
+  };
+
   const handleRemoveFavorite = (contactId: string) => {
     // Aquí se implementaría la lógica real de eliminar del backend
     // Por ahora solo mostramos un mensaje
@@ -84,8 +145,10 @@ export default function TransferScreen() {
     isPhoneValid && numericAmount > 0 && numericAmount <= mockUser.balance;
   const handleContinue = () => {
     if (!canContinue) return;
-    console.log(`Procesar recarga ${method} por ₡${numericAmount}`);
+    setShowConfirm(true);
   };
+
+  const providerLabel = PROVIDER_LABEL_MAP[method];
 
   return (
     <KeyboardAvoidingView
@@ -126,6 +189,29 @@ export default function TransferScreen() {
           onContinue={handleContinue}
         />
       </ScrollView>
+      <RechargeConfirmModal
+        visible={showConfirm}
+        provider={providerLabel}
+        phoneNumber={phoneNumber}
+        amount={numericAmount}
+        onCancel={() => {
+          setIsProcessing(false);
+          setShowConfirm(false);
+        }}
+        onConfirm={handleConfirmRecharge}
+        isProcessing={isProcessing}
+      />
+
+      {lastRecharge && (
+        <RechargeSuccessModal
+          visible={showSuccess}
+          provider={PROVIDER_LABEL_MAP[lastRecharge.provider]}
+          phoneNumber={lastRecharge.phoneNumber}
+          amount={lastRecharge.amount}
+          reference={reference}
+          onClose={handleCloseSuccess}
+        />
+      )}
     </KeyboardAvoidingView>
   );
 }

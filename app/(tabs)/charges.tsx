@@ -186,7 +186,8 @@ export default function TransferScreen() {
         <DescriptionField value={description} onChangeText={setDescription} />
 
         <ActionButtons
-          method={method}
+          primaryLabel={method === "qr" ? "Generar QR" : "Enviar cobro"}
+          primaryIcon={method === "qr" ? "qr-code-2" : "arrow-forward"}
           onCancel={handleCloseSuccess}
           onContinue={handleContinue}
         />
