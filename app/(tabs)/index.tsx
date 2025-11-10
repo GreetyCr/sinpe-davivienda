@@ -1,28 +1,32 @@
 import React, { useState, useCallback } from 'react';
-import { View, StyleSheet, ScrollView, RefreshControl } from 'react-native';
+import { View, StyleSheet, ScrollView, RefreshControl, Alert } from 'react-native';
 import { Text } from 'react-native-paper';
 import { mockUser, mockTransactions } from '@/utils/mockData';
-import { BalanceCard, MonthSummary, RecentTransactions } from '@/components/home';
+import { BalanceCard, AccountInfo, SettingsSection, RecentTransactions } from '@/components/home';
 import { Colors } from '@/constants/Colors';
 import { Spacing } from '@/constants/Spacing';
 import { Typography } from '@/constants/Typography';
 
 export default function HomeScreen() {
   const [refreshing, setRefreshing] = useState(false);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
-  // Calcular estadísticas del mes
-  const currentMonth = new Date().getMonth();
-  const monthTransactions = mockTransactions.filter(
-    (t) => t.date.getMonth() === currentMonth
-  );
+  const handleEmailChange = (newEmail: string) => {
+    console.log('Nuevo correo:', newEmail);
+    // TODO: Implementar actualización de email en el backend
+  };
 
-  const monthIncome = monthTransactions
-    .filter((t) => t.type === 'receive')
-    .reduce((sum, t) => sum + t.amount, 0);
-
-  const monthExpenses = monthTransactions
-    .filter((t) => t.type === 'send' || t.type === 'recharge')
-    .reduce((sum, t) => sum + t.amount, 0);
+  const handleNotificationsToggle = (enabled: boolean) => {
+    setNotificationsEnabled(enabled);
+    Alert.alert(
+      'Notificaciones',
+      enabled 
+        ? 'Las notificaciones han sido activadas' 
+        : 'Las notificaciones han sido desactivadas',
+      [{ text: 'Entendido' }]
+    );
+    // TODO: Implementar actualización de preferencias en el backend
+  };
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -54,8 +58,20 @@ export default function HomeScreen() {
       {/* Card de saldo con gradiente */}
       <BalanceCard balance={mockUser.balance} accountNumber={mockUser.accountNumber} />
 
-      {/* Resumen del mes */}
-      <MonthSummary income={monthIncome} expenses={monthExpenses} />
+      {/* Información de la cuenta */}
+      <AccountInfo 
+        accountNumber={mockUser.accountNumber}
+        name={mockUser.name}
+        phoneNumber={mockUser.phoneNumber}
+      />
+
+      {/* Ajustes */}
+      <SettingsSection
+        email={mockUser.email}
+        notificationsEnabled={notificationsEnabled}
+        onEmailChange={handleEmailChange}
+        onNotificationsToggle={handleNotificationsToggle}
+      />
 
       {/* Últimas transacciones - scroll horizontal */}
       <RecentTransactions transactions={mockTransactions} />
