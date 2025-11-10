@@ -28,7 +28,7 @@ export default function TabsLayout() {
           headerTitleAlign: "center",
           headerTitle: () => (
             <Image
-              source={require("@/assets/silueta_logo_grueso-02.png")}
+              source={require("@/assets/images/Silueta Logo Grueso-01.png")}
               style={{ width: 120, height: 40, resizeMode: "contain" }}
             />
           ),

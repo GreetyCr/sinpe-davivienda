@@ -1,8 +1,8 @@
 export const Typography = {
   fonts: {
-    regular: 'System',
-    italic: 'System',
-    bold: 'System',
+    regular: 'Arial',
+    italic: 'Arial-Italic',
+    bold: 'Arial-Bold',
   },
   sizes: {
     xs: 10,

@@ -1,20 +1,20 @@
 export const Colors = {
   primary: {
-    red: '#dd141d',
-    blue: '#0082C4',
-    yellow: '#ffe01c',
-    orange: '#f8991d',
-    black: '#000000',
+    red: '#ed2225',      // Pantone 485C - Rojo Davivienda
+    blue: '#0082C4',     // Pantone 3005C - Azul Davivienda
+    yellow: '#ffe01c',   // Pantone 109C - Amarillo Davivienda
+    orange: '#f8991d',   // Pantone 144C - Naranja Davivienda
+    black: '#000000',    // Black C - Negro
   },
   complementary: {
-    teal: '#00a094',
-    orange144: '#f8991d',
-    orange2: '#F58220',
-    yellow109: '#ffe01c',
-    yellow2: '#00a094',
-    gray1: '#666666',
-    gray2: '#BCBEC0',
-    white: '#FFFFFF',
+    teal: '#00a094',     // Pantone 322 - Verde azulado
+    orange144: '#f8991d',// Pantone 144C - Naranja
+    orange2: '#F58220',  // Naranja 2
+    yellow109: '#ffe01c',// Pantone 109C - Amarillo
+    yellow2: '#00a094',  // Amarillo 2 (Teal)
+    gray1: '#666666',    // Gris 1
+    gray2: '#BCBEC0',    // Gris 2
+    white: '#FFFFFF',    // Blanco
   },
   text: {
     primary: '#000000',
