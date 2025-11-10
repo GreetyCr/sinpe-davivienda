@@ -33,12 +33,18 @@ export default function TabsLayout() {
             />
           ),
           headerLeft: () => (
-            <Pressable onPress={() => setMenuVisible(true)} style={{ marginLeft: 12 }}>
+            <Pressable
+              onPress={() => setMenuVisible(true)}
+              style={{ marginLeft: 12 }}
+            >
               <MaterialCommunityIcons name="menu" size={26} color="#fff" />
             </Pressable>
           ),
           headerRight: () => (
-            <Pressable onPress={() => setChatVisible(true)} style={{ marginRight: 12 }}>
+            <Pressable
+              onPress={() => setChatVisible(true)}
+              style={{ marginRight: 12 }}
+            >
               <MaterialCommunityIcons
                 name="help-circle-outline"
                 size={26}
@@ -62,7 +68,11 @@ export default function TabsLayout() {
           options={{
             title: "Transferir",
             tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons name="bank-transfer" size={size} color={color} />
+              <MaterialCommunityIcons
+                name="bank-transfer"
+                size={size}
+                color={color}
+              />
             ),
           }}
         />
@@ -71,7 +81,11 @@ export default function TabsLayout() {
           options={{
             title: "Cobrar",
             tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons name="qrcode-scan" size={size} color={color} />
+              <MaterialCommunityIcons
+                name="qrcode-scan"
+                size={size}
+                color={color}
+              />
             ),
           }}
         />
@@ -80,7 +94,11 @@ export default function TabsLayout() {
           options={{
             title: "Recargas",
             tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons name="cellphone" size={size} color={color} />
+              <MaterialCommunityIcons
+                name="cellphone"
+                size={size}
+                color={color}
+              />
             ),
           }}
         />
@@ -89,7 +107,11 @@ export default function TabsLayout() {
           options={{
             title: "Historial",
             tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons name="history" size={size} color={color} />
+              <MaterialCommunityIcons
+                name="history"
+                size={size}
+                color={color}
+              />
             ),
           }}
         />
