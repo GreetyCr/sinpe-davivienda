@@ -4,9 +4,11 @@ import { Pressable, Image } from "react-native";
 import { Colors } from "../../constants/Colors";
 import { useState } from "react";
 import ChatWidget from "../../components/ChatWidget";
+import { DrawerMenu } from "../../components/DrawerMenu";
 
 export default function TabsLayout() {
   const [chatVisible, setChatVisible] = useState(false);
+  const [menuVisible, setMenuVisible] = useState(false);
 
   return (
     <>
@@ -31,7 +33,7 @@ export default function TabsLayout() {
             />
           ),
           headerLeft: () => (
-            <Pressable onPress={() => console.log("Menú")} style={{ marginLeft: 12 }}>
+            <Pressable onPress={() => setMenuVisible(true)} style={{ marginLeft: 12 }}>
               <MaterialCommunityIcons name="menu" size={26} color="#fff" />
             </Pressable>
           ),
@@ -46,9 +48,54 @@ export default function TabsLayout() {
           ),
         }}
       >
-        {/* tus tabs aquí */}
+        <Tabs.Screen
+          name="index"
+          options={{
+            title: "Inicio",
+            tabBarIcon: ({ color, size }) => (
+              <MaterialCommunityIcons name="home" size={size} color={color} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="transfer"
+          options={{
+            title: "Transferir",
+            tabBarIcon: ({ color, size }) => (
+              <MaterialCommunityIcons name="bank-transfer" size={size} color={color} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="charges"
+          options={{
+            title: "Cobrar",
+            tabBarIcon: ({ color, size }) => (
+              <MaterialCommunityIcons name="qrcode-scan" size={size} color={color} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="services"
+          options={{
+            title: "Recargas",
+            tabBarIcon: ({ color, size }) => (
+              <MaterialCommunityIcons name="cellphone" size={size} color={color} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="history"
+          options={{
+            title: "Historial",
+            tabBarIcon: ({ color, size }) => (
+              <MaterialCommunityIcons name="history" size={size} color={color} />
+            ),
+          }}
+        />
       </Tabs>
 
+      <DrawerMenu visible={menuVisible} onClose={() => setMenuVisible(false)} />
       <ChatWidget visible={chatVisible} onClose={() => setChatVisible(false)} />
     </>
   );
